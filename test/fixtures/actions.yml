@@ -2,12 +2,12 @@
 
 one:
   id: 1
-  description: Stop AXI
+  description: Stop Jboss
   command: ping google.com
   pool_id: 1
 
 two:
   id: 2
-  description: Start AXI
+  description: Start Jboss
   command: exit 1
   pool_id: 1

@@ -2,8 +2,8 @@
 
 one:
   id: 1
-  name: AXI servers
+  name: Jboss Servers
 
 two:
   id: 2 
-  name: AVA servers
+  name: Transaction servers
