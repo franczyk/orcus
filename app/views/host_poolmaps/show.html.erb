@@ -1,0 +1,13 @@
+<p>
+  <b>Pool:</b>
+  <%=h @host_poolmap.pool_id %>
+</p>
+
+<p>
+  <b>Host:</b>
+  <%=h @host_poolmap.host_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_host_poolmap_path(@host_poolmap) %> |
+<%= link_to 'Back', host_poolmaps_path %>

@@ -1,0 +1,24 @@
+<h1>Listing automations</h1>
+
+<table>
+  <tr>
+    <th>Chain</th>
+    <th>Active</th>
+    <th>Condition</th>
+  </tr>
+
+<% @automations.each do |automation| %>
+  <tr>
+    <td><%=h automation.chain_id %></td>
+    <td><%=h automation.active %></td>
+    <td><%=h automation.precondition %></td>
+    <td><%= link_to 'Show', automation %></td>
+    <td><%= link_to 'Edit', edit_automation_path(automation) %></td>
+    <td><%= link_to 'Destroy', automation, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New automation', new_automation_path %>

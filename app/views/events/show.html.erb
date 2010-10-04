@@ -1,0 +1,23 @@
+<p>
+  <b>Chain:</b>
+  <%=h @event.chain_id %>
+</p>
+
+<p>
+  <b>Action:</b>
+  <%=h @event.action_id %>
+</p>
+
+<p>
+  <b>Date:</b>
+  <%=h @event.date %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @event.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_event_path(@event) %> |
+<%= link_to 'Back', events_path %>

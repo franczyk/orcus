@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  pool_id: 1
+  host_id: 1
+
+two:
+  pool_id: 2 
+  host_id: 1
+
+three:
+  pool_id: 1
+  host_id: 2

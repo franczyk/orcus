@@ -1,0 +1,20 @@
+<h1>Listing pools</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+  </tr>
+
+<% @pools.each do |pool| %>
+  <tr>
+    <td><%=h pool.name %></td>
+    <td><%= link_to 'Show', pool %></td>
+    <td><%= link_to 'Edit', edit_pool_path(pool) %></td>
+    <td><%= link_to 'Destroy', pool, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New pool', new_pool_path %>

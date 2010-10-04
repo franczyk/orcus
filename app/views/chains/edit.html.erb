@@ -1,0 +1,24 @@
+<h1>Editing chain</h1>
+
+<% form_for(@chain) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :action_id %><br />
+    <%= f.text_field :action_id %>
+  </p>
+  <p>
+    <%= f.label :condition %><br />
+    <%= f.text_field :condition %>
+  </p>
+  <p>
+    <%= f.label :retries %><br />
+    <%= f.text_field :retries %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @chain %> |
+<%= link_to 'Back', chains_path %>

@@ -1,0 +1,24 @@
+<h1>Editing action</h1>
+
+<% form_for(@action) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.label :action_type_id %><br />
+    <%= f.text_field :action_type_id %>
+  </p>
+  <p>
+    <%= f.label :pool_id %><br />
+    <%= f.text_field :pool_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @action %> |
+<%= link_to 'Back', actions_path %>

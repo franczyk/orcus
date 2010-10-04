@@ -1,0 +1,18 @@
+<p>
+  <b>Description:</b>
+  <%=h @action.description %>
+</p>
+
+<p>
+  <b>Action type:</b>
+  <%=h @action.action_type_id %>
+</p>
+
+<p>
+  <b>Pool:</b>
+  <%=h @action.pool_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_action_path(@action) %> |
+<%= link_to 'Back', actions_path %>

@@ -1,0 +1,18 @@
+<p>
+  <b>Chain:</b>
+  <%=h @automation.chain_id %>
+</p>
+
+<p>
+  <b>Active:</b>
+  <%=h @automation.active %>
+</p>
+
+<p>
+  <b>Condition:</b>
+  <%=h @automation.precondition %>
+</p>
+
+
+<%= link_to 'Edit', edit_automation_path(@automation) %> |
+<%= link_to 'Back', automations_path %>

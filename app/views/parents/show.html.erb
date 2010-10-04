@@ -1,0 +1,13 @@
+<p>
+  <b>Parent chain:</b>
+  <%=h @parent.parent_chain_id %>
+</p>
+
+<p>
+  <b>Child chain:</b>
+  <%=h @parent.child_chain_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_parent_path(@parent) %> |
+<%= link_to 'Back', parents_path %>

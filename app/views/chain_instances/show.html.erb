@@ -1,0 +1,28 @@
+<p>
+  <b>Chain:</b>
+  <%=h @chain_instance.chain_id %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%=h @chain_instance.status %>
+</p>
+
+<p>
+  <b>Completed:</b>
+  <%=h @chain_instance.completed %>
+</p>
+
+<p>
+  <b>Starttime:</b>
+  <%=h @chain_instance.starttime %>
+</p>
+
+<p>
+  <b>Timeout:</b>
+  <%=h @chain_instance.timeout %>
+</p>
+
+
+<%= link_to 'Edit', edit_chain_instance_path(@chain_instance) %> |
+<%= link_to 'Back', chain_instances_path %>

@@ -1,0 +1,18 @@
+<p>
+  <b>Action:</b>
+  <%=h @chain.action_id %>
+</p>
+
+<p>
+  <b>Condition:</b>
+  <%=h @chain.condition %>
+</p>
+
+<p>
+  <b>Retries:</b>
+  <%=h @chain.retries %>
+</p>
+
+
+<%= link_to 'Edit', edit_chain_path(@chain) %> |
+<%= link_to 'Back', chains_path %>

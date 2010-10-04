@@ -1,0 +1,28 @@
+<h1>Listing chain_instances</h1>
+
+<table>
+  <tr>
+    <th>Chain</th>
+    <th>Status</th>
+    <th>Completed</th>
+    <th>Starttime</th>
+    <th>Timeout</th>
+  </tr>
+
+<% @chain_instances.each do |chain_instance| %>
+  <tr>
+    <td><%=h chain_instance.chain_id %></td>
+    <td><%=h chain_instance.status %></td>
+    <td><%=h chain_instance.completed %></td>
+    <td><%=h chain_instance.starttime %></td>
+    <td><%=h chain_instance.timeout %></td>
+    <td><%= link_to 'Show', chain_instance %></td>
+    <td><%= link_to 'Edit', edit_chain_instance_path(chain_instance) %></td>
+    <td><%= link_to 'Destroy', chain_instance, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New chain_instance', new_chain_instance_path %>

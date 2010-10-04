@@ -1,0 +1,22 @@
+<h1>Listing host_poolmaps</h1>
+
+<table>
+  <tr>
+    <th>Pool</th>
+    <th>Host</th>
+  </tr>
+
+<% @host_poolmaps.each do |host_poolmap| %>
+  <tr>
+    <td><%=h host_poolmap.pool_id %></td>
+    <td><%=h host_poolmap.host_id %></td>
+    <td><%= link_to 'Show', host_poolmap %></td>
+    <td><%= link_to 'Edit', edit_host_poolmap_path(host_poolmap) %></td>
+    <td><%= link_to 'Destroy', host_poolmap, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New host_poolmap', new_host_poolmap_path %>

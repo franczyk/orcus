@@ -1,0 +1,24 @@
+<h1>Listing chains</h1>
+
+<table>
+  <tr>
+    <th>Action</th>
+    <th>Condition</th>
+    <th>Retries</th>
+  </tr>
+
+<% @chains.each do |chain| %>
+  <tr>
+    <td><%=h chain.action_id %></td>
+    <td><%=h chain.condition %></td>
+    <td><%=h chain.retries %></td>
+    <td><%= link_to 'Show', chain %></td>
+    <td><%= link_to 'Edit', edit_chain_path(chain) %></td>
+    <td><%= link_to 'Destroy', chain, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New chain', new_chain_path %>

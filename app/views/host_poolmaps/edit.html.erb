@@ -1,0 +1,20 @@
+<h1>Editing host_poolmap</h1>
+
+<% form_for(@host_poolmap) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :pool_id %><br />
+    <%= f.text_field :pool_id %>
+  </p>
+  <p>
+    <%= f.label :host_id %><br />
+    <%= f.text_field :host_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @host_poolmap %> |
+<%= link_to 'Back', host_poolmaps_path %>
