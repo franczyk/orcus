@@ -1,0 +1,6 @@
+This should not be talking directly to the database.
+
+Instead, it needs to load its objects via REST interface.  
+Perhaps activerecord isnt the right tool, perhaps datamapper?
+
+It needs to have its own authentication system as well.
