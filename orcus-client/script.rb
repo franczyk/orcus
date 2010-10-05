@@ -9,31 +9,14 @@ h=Host.first
 # remove action_Type_id
 # add actual commands to actions table  command:
 
-begin
-  if h.pools.count > 0
-    puts "Found some pools."
-    if h.pools.any? 
-      h.pools.each do |p|
-        puts "pool item"
-        if p.actions.any?
-          puts "found some actions."
-        end
-        p.actions.each do |a|
-          puts a.description
-          a.chains.each do |c|
-            c.chain_instances.each do |ci|
-		          ransomething = RunAllBottomEntries(ci)
-		          if ransomething
-		            ArchiveChainInstance(c)
-	            end
-	          end
-          end
-        end
-      end
-    end
-  end
-rescue
-  puts "Caught some crazy issue!"
+
+
+
+
+def ArchiveChainInstance(ci)
+  # Archive this to another table.
+  puts "NEED TO CREATE ARCHIVING"
+  return
 end
 
 def runChildren(ci)
@@ -42,42 +25,51 @@ def runChildren(ci)
     childinstance.starttime = Time.now
     childinstance.timeout = chain.timeout # TODO:  Add the timeout field to the chains table!!!
     childinstance.save
+    puts "Running command: " + ci.chain.action.command
     System(ci.chain.action.command)  # TODO:  Trap the exit status and the output!!!
   end
 end
 
 
 def RunAllBottomEntries(ci)
+  puts "Running all bottom entries."
 	if isOpen(ci)
 		# dont touch this one cause its waiting to complete.
 	elsif isTimeOut(ci)
 		FindFalseChild(ci)
 	else
-	 	returnvalue = GetReturnValue(ci)
-		if returnValue == true
-			RunAllBottomEntries(FindChild(ci, true))
-		else
-			RunAllBottomEntries(FindChild(ci, false))
-		end
+		if ci.children.any?
+		  ci.children.each do |child|
+		    if child.chain.precondition == ci.status
+		      rc = RunAllBottomEntries(child)
+	        if ransomething == false and rc == true
+	          ransomething = true
+          end
+	      end
+      end
+    else
+      if ci.chain.children.any?
+        runChildren(ci)
+        ransomething = true
+      end
+    end
 	end
+	return ransomething
 end
+
 
 def FindChild(ci, success)
   if ci.children.any? 
+    # There are instances of children that have started (and may have finished)
   	ci.children.each do |child|
   		if child.chain.precondition == success 
   			return child  # I need to return multiple children, because multiple children can run on true/false.
   		end
   	end
 	else
-	  # If there are no children in the instance table, create them if they should exist, and run the job.
-	  ### RIGHT HERE.
+	  # There are no instances of children that have started.  Start some if they should be started.
     if ci.chain.children.any?
-      # Need to create them.
       runChildren(ci)
-      
-    else
-      # this was the end of the road.  How do I close this out so that I dont have to scan it in the future?
     end  
   end
 end
@@ -98,5 +90,42 @@ def isTimedOut(instance)
 end
 
 
+def CheckAllActions(pool)
+  puts "pool item"
+  if pool.actions.any?
+    puts "found some actions."
+  end
+  pool.actions.each do |a|
+    puts "Performing action: " + a.description
+    begin
+      a.chains.each do |c|
+           
+        puts "Found a chain: " + c.chain_instances.count.to_s
+        c.chain_instances.each do |ci|
+          puts "found an instance."
+          ransomething = RunAllBottomEntries(ci)
+          if ransomething == true
+            ArchiveChainInstance(ci)
+          end  # if
+        end  # c.chain_instances
+     
+      end # a.chains
+    rescue
+        puts "Problem parsing all chain actions."
+    end
+  end
+end
 
+
+begin
+  if h.pools.count > 0
+    if h.pools.any? 
+      h.pools.each do |p|
+        CheckAllActions(p)
+      end
+    end
+  end
+rescue
+  puts "Caught some crazy issue!"
+end
 

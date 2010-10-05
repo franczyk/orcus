@@ -14,6 +14,18 @@ class Chain < ActiveRecord::Base
 
   has_many :child_parent_relationships, :foreign_key => "parent_chain_id", :class_name => "Parent"
   has_many :children, :through => :child_parent_relationships, :source => :parent
+
+  has_many :chain_instances
+end
+class ChainInstance < ActiveRecord::Base
+  belongs_to :chain
+  
+  has_many :parent_child_relationships, :foreign_key => "child_chain_instance_id", :class_name => "ParentInstance"
+  has_many :parents, :through => :parent_child_relationships, :source => :child
+
+  has_many :child_parent_relationships, :foreign_key => "parent_chain_instance_id", :class_name => "ParentInstance"
+  has_many :children, :through => :child_parent_relationships, :source => :parent
+  
 end
 class Event < ActiveRecord::Base
 end
@@ -29,6 +41,8 @@ class Parent < ActiveRecord::Base
   belongs_to :parent, :class_name => 'Chain', :foreign_key => 'parent_chain_id'
   belongs_to :child, :class_name => 'Chain', :foreign_key => 'child_chain_id'
   #validates_existence_of :parent_chain, :child_chain
+end
+class ParentInstance < ActiveRecord::Base
 end
 class Pool < ActiveRecord::Base
   has_many :host_poolmaps
