@@ -1,0 +1,13 @@
+<p>
+  <b>Parent chain instance:</b>
+  <%=h @parent_instance.parent_chain_instance_id %>
+</p>
+
+<p>
+  <b>Child chain instance:</b>
+  <%=h @parent_instance.child_chain_instance_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_parent_instance_path(@parent_instance) %> |
+<%= link_to 'Back', parent_instances_path %>

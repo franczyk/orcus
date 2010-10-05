@@ -1,0 +1,20 @@
+<h1>Editing parent_instance</h1>
+
+<% form_for(@parent_instance) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :parent_chain_instance_id %><br />
+    <%= f.text_field :parent_chain_instance_id %>
+  </p>
+  <p>
+    <%= f.label :child_chain_instance_id %><br />
+    <%= f.text_field :child_chain_instance_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @parent_instance %> |
+<%= link_to 'Back', parent_instances_path %>
