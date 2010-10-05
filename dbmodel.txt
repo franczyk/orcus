@@ -92,3 +92,71 @@ create_table "chains", :force => true do |t|
 
 should the timeout be in the original CHAIN, or in each individual instance?  It might be useful to alter the timeout for a particular instance.  Dunno.
 
+######
+ParentInstance parent_chain_instance_id:integer child_chain_instance_id:integer
+
+
+Chain		ChainInstance
+Parent	 	ParentInstance
+trueChild,FalseChild,TimeoutChild (there can be only three!?)
+
+if LinkInstanceExists(chain)
+  chain.chain_instances.each do |ci|
+  	GetAllBottomEntr
+  	if entryClosedorTimedOut(entry)
+		if ExistsNextChild(entry)
+			RunNextChild(entry)
+		end
+	end
+  end
+end
+
+
+if chain.chain_instances.any?
+   	chain.chain_instances.each do |ci|
+		RunAllBottomEntries(ci)
+	end
+end
+
+
+
+
+def GetAllBottomEntries(ci)
+	if isOpen(ci)
+		# dont touch this one cause its waiting to complete.
+	else if isTimeOut(ci)
+		FindFalseChild(ci)
+	else
+	 	returnvalue = GetReturnValue(ci)
+		if returnValue == true
+			GetAllBottomEntries(FindChild(ci, true))
+		else
+			GetAllBottomEntries(FindChild(ci, false))
+		end
+	end
+end
+
+def FindChild(ci, success)
+	ci.children.each do |child|
+		if child.chain.precondition == success 
+			return child  # I need to return multiple children, because multiple children can run on true/false.
+		end
+	end
+end
+
+def isOpen(instance)
+	unless instance.completed.nil?
+		return true
+	end
+	return false
+end
+
+def isTimedOut(instance)
+	if instance.timeout + instance.starttime < Time.now
+		# Timed out!  
+		return true
+	end
+	return false
+end
+
+

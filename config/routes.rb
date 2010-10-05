@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :parent_instances
+
   map.resources :chain_instances
 
   map.resources :chains

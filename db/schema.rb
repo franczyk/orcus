@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101003223757) do
+ActiveRecord::Schema.define(:version => 20101005020727) do
 
   create_table "actions", :force => true do |t|
     t.string   "description"
@@ -63,6 +63,13 @@ ActiveRecord::Schema.define(:version => 20101003223757) do
 
   create_table "hosts", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "parent_instances", :force => true do |t|
+    t.integer  "parent_chain_instance_id"
+    t.integer  "child_chain_instance_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -2737,3 +2737,93 @@ Migrating to CreateChainInstances (20101003223757)
   [4;35;1mSQL (2.2ms)[0m   [0mdescribe `pools`[0m
   [4;36;1mSQL (0.4ms)[0m   [0;1mSHOW KEYS FROM `pools`[0m
   [4;35;1mSQL (0.1ms)[0m   [0mSET SQL_AUTO_IS_NULL=0[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mChain Load (0.3ms)[0m   [0mSELECT * FROM `chains` LIMIT 1[0m
+  [4;36;1mChain Columns (1.2ms)[0m   [0;1mSHOW FIELDS FROM `chains`[0m
+  [4;35;1mChainInstance Load (0.4ms)[0m   [0mSELECT * FROM `chain_instances` WHERE (`chain_instances`.chain_id = 1) [0m
+  [4;36;1mChainInstance Columns (1.1ms)[0m   [0;1mSHOW FIELDS FROM `chain_instances`[0m
+  [4;35;1mChain Load (0.4ms)[0m   [0mSELECT * FROM `chains` WHERE (`chains`.`id` = 1) [0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m
+  [4;35;1mSQL (0.2ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (50.1ms)[0m   [0;1mCREATE TABLE `actions` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `description` varchar(255), `command` varchar(255), `pool_id` int(11), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (96.3ms)[0m   [0;1mCREATE TABLE `automations` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `chain_id` int(11), `active` tinyint(1), `precondition` varchar(255), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (66.0ms)[0m   [0;1mCREATE TABLE `chain_instances` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `chain_id` int(11), `status` tinyint(1), `completed` datetime, `starttime` datetime, `timeout` int(11), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (65.7ms)[0m   [0;1mCREATE TABLE `chains` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `action_id` int(11), `precondition` varchar(255), `retries` int(11), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (74.3ms)[0m   [0;1mCREATE TABLE `events` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `chain_id` int(11), `action_id` int(11), `date` datetime, `description` varchar(255), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (73.8ms)[0m   [0;1mCREATE TABLE `host_poolmaps` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `pool_id` int(11), `host_id` int(11), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (74.3ms)[0m   [0;1mCREATE TABLE `hosts` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (74.0ms)[0m   [0;1mCREATE TABLE `parents` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `parent_chain_id` int(11), `child_chain_id` int(11), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (71.3ms)[0m   [0;1mCREATE TABLE `pools` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `name` varchar(255), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.5ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (65.7ms)[0m   [0;1mCREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mSHOW KEYS FROM `schema_migrations`[0m
+  [4;36;1mSQL (67.7ms)[0m   [0;1mCREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSELECT version FROM `schema_migrations`[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mINSERT INTO `schema_migrations` (version) VALUES ('20101003223757')[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mINSERT INTO `schema_migrations` (version) VALUES ('20101002045443')[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mINSERT INTO `schema_migrations` (version) VALUES ('20101002045640')[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mINSERT INTO `schema_migrations` (version) VALUES ('20101002045806')[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mINSERT INTO `schema_migrations` (version) VALUES ('20101002050054')[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mINSERT INTO `schema_migrations` (version) VALUES ('20101002050132')[0m
+  [4;35;1mSQL (0.9ms)[0m   [0mINSERT INTO `schema_migrations` (version) VALUES ('20101002140627')[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mINSERT INTO `schema_migrations` (version) VALUES ('20101002140857')[0m
+  [4;35;1mSQL (0.3ms)[0m   [0mINSERT INTO `schema_migrations` (version) VALUES ('20101002164621')[0m
+  [4;36;1mSQL (0.3ms)[0m   [0;1mINSERT INTO `schema_migrations` (version) VALUES ('20101002171029')[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+Migrating to CreateHosts (20101002045443)
+Migrating to CreateActionargs (20101002045640)
+Migrating to CreateActions (20101002045806)
+Migrating to CreateAutomations (20101002050054)
+Migrating to CreateEvents (20101002050132)
+Migrating to CreateHostPoolmaps (20101002140627)
+Migrating to CreatePools (20101002140857)
+Migrating to CreateParents (20101002164621)
+Migrating to CreateChains (20101002171029)
+Migrating to CreateChainInstances (20101003223757)
+Migrating to CreateParentInstances (20101005020727)
+  [4;35;1mSQL (60.8ms)[0m   [0mCREATE TABLE `parent_instances` (`id` int(11) DEFAULT NULL auto_increment PRIMARY KEY, `parent_chain_instance_id` int(11), `child_chain_instance_id` int(11), `created_at` datetime, `updated_at` datetime) ENGINE=InnoDB[0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1mINSERT INTO schema_migrations (version) VALUES ('20101005020727')[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (0.2ms)[0m   [0;1mSELECT version FROM schema_migrations[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSHOW TABLES[0m
+  [4;36;1mSQL (1.0ms)[0m   [0;1mSHOW FIELDS FROM `actions`[0m
+  [4;35;1mSQL (1.2ms)[0m   [0mdescribe `actions`[0m
+  [4;36;1mSQL (1.1ms)[0m   [0;1mSHOW KEYS FROM `actions`[0m
+  [4;35;1mSQL (0.9ms)[0m   [0mSHOW FIELDS FROM `automations`[0m
+  [4;36;1mSQL (1.9ms)[0m   [0;1mdescribe `automations`[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mSHOW KEYS FROM `automations`[0m
+  [4;36;1mSQL (0.8ms)[0m   [0;1mSHOW FIELDS FROM `chain_instances`[0m
+  [4;35;1mSQL (1.7ms)[0m   [0mdescribe `chain_instances`[0m
+  [4;36;1mSQL (0.6ms)[0m   [0;1mSHOW KEYS FROM `chain_instances`[0m
+  [4;35;1mSQL (0.9ms)[0m   [0mSHOW FIELDS FROM `chains`[0m
+  [4;36;1mSQL (1.2ms)[0m   [0;1mdescribe `chains`[0m
+  [4;35;1mSQL (0.7ms)[0m   [0mSHOW KEYS FROM `chains`[0m
+  [4;36;1mSQL (0.9ms)[0m   [0;1mSHOW FIELDS FROM `events`[0m
+  [4;35;1mSQL (1.1ms)[0m   [0mdescribe `events`[0m
+  [4;36;1mSQL (0.7ms)[0m   [0;1mSHOW KEYS FROM `events`[0m
+  [4;35;1mSQL (1.3ms)[0m   [0mSHOW FIELDS FROM `host_poolmaps`[0m
+  [4;36;1mSQL (1.4ms)[0m   [0;1mdescribe `host_poolmaps`[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mSHOW KEYS FROM `host_poolmaps`[0m
+  [4;36;1mSQL (0.7ms)[0m   [0;1mSHOW FIELDS FROM `hosts`[0m
+  [4;35;1mSQL (1.1ms)[0m   [0mdescribe `hosts`[0m
+  [4;36;1mSQL (0.5ms)[0m   [0;1mSHOW KEYS FROM `hosts`[0m
+  [4;35;1mSQL (0.9ms)[0m   [0mSHOW FIELDS FROM `parent_instances`[0m
+  [4;36;1mSQL (1.9ms)[0m   [0;1mdescribe `parent_instances`[0m
+  [4;35;1mSQL (0.4ms)[0m   [0mSHOW KEYS FROM `parent_instances`[0m
+  [4;36;1mSQL (0.9ms)[0m   [0;1mSHOW FIELDS FROM `parents`[0m
+  [4;35;1mSQL (1.1ms)[0m   [0mdescribe `parents`[0m
+  [4;36;1mSQL (0.4ms)[0m   [0;1mSHOW KEYS FROM `parents`[0m
+  [4;35;1mSQL (0.7ms)[0m   [0mSHOW FIELDS FROM `pools`[0m
+  [4;36;1mSQL (1.6ms)[0m   [0;1mdescribe `pools`[0m
+  [4;35;1mSQL (0.6ms)[0m   [0mSHOW KEYS FROM `pools`[0m
+  [4;36;1mSQL (0.1ms)[0m   [0;1mSET SQL_AUTO_IS_NULL=0[0m

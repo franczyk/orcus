@@ -6,4 +6,6 @@ class Chain < ActiveRecord::Base
 
   has_many :child_parent_relationships, :foreign_key => "parent_chain_id", :class_name => "Parent"
   has_many :children, :through => :child_parent_relationships, :source => :parent
+
+  has_many :chain_instances
 end

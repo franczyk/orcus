@@ -15,46 +15,88 @@ begin
     if h.pools.any? 
       h.pools.each do |p|
         puts "pool item"
-        
         if p.actions.any?
           puts "found some actions."
         end
         p.actions.each do |a|
           puts a.description
           a.chains.each do |c|
-            if runAction
-              unless instanceExists(c)
-                #create instance
-                ci=ChainInstance.create
-                ci.chain_id = c.id
-                runAction(c.action)
-              end
-            end
+            c.chain_instances.each do |ci|
+		          ransomething = RunAllBottomEntries(ci)
+		          if ransomething
+		            ArchiveChainInstance(c)
+	            end
+	          end
           end
         end
       end
     end
   end
 rescue
-  puts "Pools issue"
+  puts "Caught some crazy issue!"
 end
 
-def runsNow(precondition)
-  return 1
+def runChildren(ci)
+  ci.chain.children.each do |child|
+    childinstance = ci.child.create
+    childinstance.starttime = Time.now
+    childinstance.timeout = chain.timeout # TODO:  Add the timeout field to the chains table!!!
+    childinstance.save
+    System(ci.chain.action.command)  # TODO:  Trap the exit status and the output!!!
+  end
 end
 
-def instanceExists(chain)
-  # search to see if an instance of this chain exists (for this time)'
-  # How do i determine if a particular instance exists?  Base it off of some certain existance?  Time stamp? 
-  #  Can place the timestamp of the instance in the instance.  THen, look for the instance next time?
-  #   What if it is a child of a parent event?   hm
-  
-  ci.find_by_chain_id(chain.id) 
-  
-  
-  puts "instanceExists?"
+
+def RunAllBottomEntries(ci)
+	if isOpen(ci)
+		# dont touch this one cause its waiting to complete.
+	elsif isTimeOut(ci)
+		FindFalseChild(ci)
+	else
+	 	returnvalue = GetReturnValue(ci)
+		if returnValue == true
+			RunAllBottomEntries(FindChild(ci, true))
+		else
+			RunAllBottomEntries(FindChild(ci, false))
+		end
+	end
 end
 
-def runAction(action)
-  puts "Running " + action.command
+def FindChild(ci, success)
+  if ci.children.any? 
+  	ci.children.each do |child|
+  		if child.chain.precondition == success 
+  			return child  # I need to return multiple children, because multiple children can run on true/false.
+  		end
+  	end
+	else
+	  # If there are no children in the instance table, create them if they should exist, and run the job.
+	  ### RIGHT HERE.
+    if ci.chain.children.any?
+      # Need to create them.
+      runChildren(ci)
+      
+    else
+      # this was the end of the road.  How do I close this out so that I dont have to scan it in the future?
+    end  
+  end
 end
+
+def isOpen(instance)
+	unless instance.completed.nil?
+		return true
+	end
+	return false
+end
+
+def isTimedOut(instance)
+	if instance.timeout + instance.starttime < Time.now
+		# Timed out!  
+		return true
+	end
+	return false
+end
+
+
+
+
