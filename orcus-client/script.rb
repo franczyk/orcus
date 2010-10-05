@@ -22,9 +22,7 @@ begin
         p.actions.each do |a|
           puts a.description
           a.chains.each do |c|
-            #finally got to chains! ! holy shit that took some effort!
-            if runsNow(c.precondition)
-              # add to Chain_instances if one doesnt already exist.
+            if runAction
               unless instanceExists(c)
                 #create instance
                 ci=ChainInstance.create
@@ -49,9 +47,9 @@ def instanceExists(chain)
   # search to see if an instance of this chain exists (for this time)'
   # How do i determine if a particular instance exists?  Base it off of some certain existance?  Time stamp? 
   #  Can place the timestamp of the instance in the instance.  THen, look for the instance next time?
-  #   What if it is a child of a parent event?   
+  #   What if it is a child of a parent event?   hm
   
-  ci.find_by_chain_id(chain.id)  # this will find any instance... but I need to find the CURRENT ID
+  ci.find_by_chain_id(chain.id) 
   
   
   puts "instanceExists?"
