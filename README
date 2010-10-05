@@ -1,8 +1,11 @@
 ORCUS
 
-Orcus is a distributed automation system.  Its designed as a 'distributed cron' 
-where one node can have tasks that depend on tasks occurring on other nodes, tasks 
-get retried multiple times, and if they fail, they notify the appropriate people. 
+# This project is not yet operational...
+
+Orcus is a distributed automation system, much like AutoSys, UC4, or Tidal.  Its 
+designed as a 'distributed cron' where one node can have tasks that depend on tasks 
+occurring on other nodes.  Tasks can be retried multiple times, and if they fail, 
+they notify the appropriate people. 
 
 This orcus project is the web front end for managing the system.
 The orcus-client is the client side node app that communicates with the database.
