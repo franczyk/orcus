@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101005020727) do
+ActiveRecord::Schema.define(:version => 20101006203709) do
 
   create_table "actions", :force => true do |t|
     t.string   "description"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20101005020727) do
     t.integer  "retries"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "timeout"
   end
 
   create_table "events", :force => true do |t|

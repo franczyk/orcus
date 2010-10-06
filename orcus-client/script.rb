@@ -23,10 +23,19 @@ def runChildren(ci)
   ci.chain.children.each do |child|
     childinstance = ci.child.create
     childinstance.starttime = Time.now
-    childinstance.timeout = chain.timeout # TODO:  Add the timeout field to the chains table!!!
+    childinstance.timeout = chain.timeout 
     childinstance.save
     puts "Running command: " + ci.chain.action.command
-    System(ci.chain.action.command)  # TODO:  Trap the exit status and the output!!!
+    rc = system(ci.chain.action.command)  # TODO:  Trap the exit status and the output!!! (WISHLIST)
+    if rc
+      childinstance.status = true
+      childinstance.save
+      return true
+    else
+      childinstance.status = false
+      childinstance.save
+      return false
+    end
   end
 end
 
@@ -91,10 +100,35 @@ end
 
 def isRightTime(chain)
   cronentry = chain.condition
-  timearray = Time.new.to_a
-  cronarray = cronentry.split(/\s+/)
-  # TODO Compare cronarray and timearray.  
-  return true
+  ta = Time.now.to_a
+  ca = cronentry.split(/\s+/)
+  
+  # TODO Allow for comma delimited time statements within the Cron entry.
+
+  # The cron current allows for exact hour,minute,second,etc., or * for wildcard.
+  
+  if ca[0] == "*" 
+    ta[1] = "*"
+  end
+  if ca[1] == "*"
+    ta[2] = "*"
+  end
+  if ca[2] == "*"
+    ta[3] = "*"
+  end
+  if ca[3] == "*"
+    ta[4] = "*"
+  end
+  if ca[4] == "*"
+    ta[6] == "*"
+  end
+  
+  if ta[1] == ca[0] && ta[2] == ca[1] && ta[3] == ca[2] && ta[4] == ca[3] && ta[6] == ca[4] 
+    return true
+  else
+    return false
+  end
+  
 end
 
 def CheckAllActions(pool)
@@ -107,7 +141,7 @@ def CheckAllActions(pool)
     begin
       a.chains.each do |c|
         puts "Found a chain: " + c.chain_instances.count.to_s
-        if c.active == true  # TODO:  create an active flag for chains
+        if c.active == true  # TODO:  create an active flag for chains  .. THink about this first... should i be doing it from automations?
           if isRightTime(c)
             c.chain_instances.each do |ci|
               puts "found an instance."
