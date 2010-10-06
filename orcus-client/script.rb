@@ -10,7 +10,7 @@ h=Host.first
 # add actual commands to actions table  command:
 
 
-
+# TODO:  validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
 
 
 def ArchiveChainInstance(ci)
@@ -89,6 +89,13 @@ def isTimedOut(instance)
 	return false
 end
 
+def isRightTime(chain)
+  cronentry = chain.condition
+  timearray = Time.new.to_a
+  cronarray = cronentry.split(/\s+/)
+  # TODO Compare cronarray and timearray.  
+  return true
+end
 
 def CheckAllActions(pool)
   puts "pool item"
@@ -99,16 +106,18 @@ def CheckAllActions(pool)
     puts "Performing action: " + a.description
     begin
       a.chains.each do |c|
-           
         puts "Found a chain: " + c.chain_instances.count.to_s
-        c.chain_instances.each do |ci|
-          puts "found an instance."
-          ransomething = RunAllBottomEntries(ci)
-          if ransomething == true
-            ArchiveChainInstance(ci)
-          end  # if
-        end  # c.chain_instances
-     
+        if c.active == true  # TODO:  create an active flag for chains
+          if isRightTime(c)
+            c.chain_instances.each do |ci|
+              puts "found an instance."
+              ransomething = RunAllBottomEntries(ci)
+              if ransomething == true
+                ArchiveChainInstance(ci)
+              end  # if
+            end  # c.chain_instances
+          end
+        end
       end # a.chains
     rescue
         puts "Problem parsing all chain actions."
