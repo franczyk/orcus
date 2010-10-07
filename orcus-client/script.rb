@@ -12,8 +12,6 @@ h=Host.first
 ### TO DOS:
 # remove action_Type_id
 # add actual commands to actions table  command:
-
-
 # TODO:  validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
 
 
@@ -25,7 +23,7 @@ end
 
 def runChainInstance(ci)
   puts "Running command: " + ci.chain.action.command if DEBUG
-  rc = system(ci.chain.action.command)  # TODO:  Trap the exit status and the output!!! (WISHLIST)
+  rc = system(ci.chain.action.command)  # WISHLIST:  Trap the output.
   if rc
     childinstance.status = true
     childinstance.save
@@ -161,9 +159,10 @@ def isRightTime(chain)
     ta[6] == "*"
   end
   
-  #TEMPORARY TODO
-  puts "returning true for isRightTime" if DEBUG
-  return true
+  if DEBUG
+    puts "returning true for isRightTime" if DEBUG
+    return true
+  end
 
   if ta[1] == ca[0] && ta[2] == ca[1] && ta[3] == ca[2] && ta[4] == ca[3] && ta[6] == ca[4] 
     puts "Its time to run!"
