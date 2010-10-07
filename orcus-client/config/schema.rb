@@ -43,6 +43,8 @@ class Parent < ActiveRecord::Base
   #validates_existence_of :parent_chain, :child_chain
 end
 class ParentInstance < ActiveRecord::Base
+  belongs_to :parent, :class_name => 'ChainInstance', :foreign_key => 'parent_chain_instance_id'
+  belongs_to :child, :class_name => 'ChainInstance', :foreign_key => 'child_chain_instance_id'
 end
 class Pool < ActiveRecord::Base
   has_many :host_poolmaps
