@@ -9,21 +9,25 @@ hostname = Socket.gethostname
 h=Host.find_by_name(hostname)
 h=Host.first
 
-### TO DOS:
-# remove action_Type_id
-# add actual commands to actions table  command:
-# TODO:  validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
+### TODOs:
+### validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
+
+### WISHLISTS
+### Trap the output of the system() command.
+### Allow for mulitple parents, multiple children.
 
 
+###################################
 def ArchiveChainInstance(ci)
   # Archive this to another table.
   puts "NEED TO CREATE ARCHIVING" if DEBUG
   return
 end
 
+###################################
 def runChainInstance(ci)
   puts "Running command: " + ci.chain.action.command if DEBUG
-  rc = system(ci.chain.action.command)  # WISHLIST:  Trap the output.
+  rc = system(ci.chain.action.command)  
   if rc
     childinstance.status = true
     childinstance.save
@@ -35,6 +39,7 @@ def runChainInstance(ci)
   end
 end
 
+###################################
 def runChildren(ci)
   ci.chain.children.each do |child|
     childinstance = ci.child.create
@@ -45,6 +50,7 @@ def runChildren(ci)
   end
 end
 
+###################################
 def runFalseChild(ci)
   puts "finding false child."
   ci.children.each do |cic|
@@ -55,7 +61,7 @@ def runFalseChild(ci)
   end
 end
 
-
+###################################
 def RunAllBottomEntries(ci)
   puts "Running all bottom entries." if DEBUG
 	if isOpen(ci)
@@ -85,7 +91,7 @@ def RunAllBottomEntries(ci)
 	return ransomething
 end
 
-
+###################################
 def FindChild(ci, success)
   if ci.children.any? 
     # There are instances of children that have started (and may have finished)
@@ -102,6 +108,7 @@ def FindChild(ci, success)
   end
 end
 
+###################################
 def isOpen(instance)
 	unless instance.completed.nil?
 		return true
@@ -109,6 +116,7 @@ def isOpen(instance)
 	return false
 end
 
+###################################
 def isTimedOut(instance)
   timeoutseconds = instance.timeout.to_i * 60
   if instance.starttime.to_f + timeoutseconds < Time.now.to_f 
@@ -118,6 +126,8 @@ def isTimedOut(instance)
   end
 end
 
+
+###################################
 def isCronStyleEntry(cronentry)
 
   puts "cronentry = " + cronentry
@@ -129,6 +139,26 @@ def isCronStyleEntry(cronentry)
   end
 end
 
+def isSameTime(crontime, currenttime)
+  if crontime == "*"
+    return true
+  end
+  if crontime == currenttime 
+    return true
+  end
+  if cronarray.include? ","
+    cronarray = crontime.split(/,/)
+    cronarray.each do |time|
+      if time == currenttime 
+        return true
+      end
+    end
+  end
+  return false
+end
+
+
+###################################
 def isRightTime(chain)
   cronentry = chain.precondition
   unless isCronStyleEntry(chain.precondition)
@@ -143,28 +173,13 @@ def isRightTime(chain)
   ca = cronentry.split(/\s+/)
   # TODO Allow for comma delimited time statements within the Cron entry.
   # The cron current allows for exact hour,minute,second,etc., or * for wildcard.
-  if ca[0] == "*" 
-    ta[1] = "*"
-  end
-  if ca[1] == "*"
-    ta[2] = "*"
-  end
-  if ca[2] == "*"
-    ta[3] = "*"
-  end
-  if ca[3] == "*"
-    ta[4] = "*"
-  end
-  if ca[4] == "*"
-    ta[6] == "*"
-  end
   
   if DEBUG
     puts "returning true for isRightTime" if DEBUG
     return true
   end
 
-  if ta[1] == ca[0] && ta[2] == ca[1] && ta[3] == ca[2] && ta[4] == ca[3] && ta[6] == ca[4] 
+  if isSameTime(ca[0], ta[1]) && isSameTime(ca[1], ta[2]) &&  isSameTime(ca[2], ta[3]) && isSameTime(ca[3], ta[4]) && isSameTime(ca[4], ta[6]) 
     puts "Its time to run!"
     return true
   else
@@ -174,6 +189,7 @@ def isRightTime(chain)
   
 end
 
+###################################
 def CheckAllActions(pool)
   puts "pool item"
   if pool.actions.any?
@@ -214,6 +230,11 @@ def CheckAllActions(pool)
   end
 end
 
+###################################
+###################################
+## PRIMARY CODE
+###################################
+###################################
 
 begin
   if h.pools.count > 0
