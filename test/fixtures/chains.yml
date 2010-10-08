@@ -3,11 +3,13 @@
 one:
   id: 1
   action_id: 1
-  precondition: true
+  precondition: 0 3 * * * doing something
   retries: 1
+  timeout: 1
 
 two:
   id: 2
   action_id: 1
-  precondition: false
+  precondition: 4 2 * * * doing some more
   retries: 1
+  timeout: 1

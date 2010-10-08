@@ -3,7 +3,7 @@
 one:
   id: 1
   description: Stop Jboss
-  command: ping google.com
+  command: ping -c 3 google.com
   pool_id: 1
 
 two:

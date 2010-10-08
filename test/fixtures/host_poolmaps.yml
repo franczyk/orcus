@@ -11,3 +11,7 @@ two:
 three:
   pool_id: 1
   host_id: 2
+
+four: 
+ pool_id: 1
+ host_id: 3
