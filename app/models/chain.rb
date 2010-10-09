@@ -8,5 +8,5 @@ class Chain < ActiveRecord::Base
   has_many :children, :through => :child_parent_relationships, :source => :parent
 
   has_many :chain_instances
-  validates_existence_of :action
+  #validates_existence_of :action
 end

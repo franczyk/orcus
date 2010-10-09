@@ -64,7 +64,7 @@ def ArchiveChainInstanceTree(ci)
 end
 
 ###################################
-def runChainInstance(ci)
+def runChainInstance(ci, retrynumber)
   puts "Running command: " + ci.chain.action.command if DEBUG == 1
   rc = system(ci.chain.action.command)  
   if rc
@@ -72,9 +72,21 @@ def runChainInstance(ci)
     ci.save
     return true
   else
-    ci.status = false
-    ci.save
-    return false
+    
+    if retrynumber.nil? 
+      retrynumber=0
+    else
+      retrynumber=retrynumber + 1 
+    end
+    
+    if retrynumber >= ci.chain.retries
+      ci.status = false
+      ci.save
+      return false
+    else
+      runChainInstance(ci, retrynumber)
+    end
+    
   end
 end
 
@@ -178,7 +190,7 @@ end
 def isCronStyleEntry(cronentry)
 
   puts "cronentry = " + cronentry if DEBUG == 1
-  if cronentry =~ /^[0-9\*]+\s+[0-9\*]+\s+[0-9\*]+\s+[0-9\*]+\s+[0-9\*]+\s*.*/
+  if cronentry =~ /^[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s*.*/
     puts "is a cron style entry" if DEBUG == 1
     return true
   else
@@ -201,11 +213,14 @@ def isSameTime(crontime, currenttime)
   end
   puts crontime.to_s + " is not equal to " + currenttime.to_s
   
-  puts "checking for commas"
+  puts "checking for commas" if DEBUG==1
   if crontime.include? ","
+    puts "found commas " if DEBUG==1
     cronarray = crontime.split(/,/)
     cronarray.each do |time|
-      if time == currenttime 
+      puts "comparing " + currenttime.to_s + " to " + time.to_s if DEBUG==1
+      if time.to_i == currenttime.to_i 
+        puts "Match! " if DEBUG==1
         return true
       end
     end
