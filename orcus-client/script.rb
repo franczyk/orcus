@@ -26,6 +26,7 @@ h.save
 ### Move all this business logic into a web service/ controller.  
 # =>  Call it via a basic "controller.xml", and have it return the stuff that needs to run.
 
+### Retries need to be honored.
 
 ### WISHLISTS
 ### Trap the output of the system() command.

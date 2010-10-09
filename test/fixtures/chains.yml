@@ -3,13 +3,20 @@
 one:
   id: 1
   action_id: 1
-  precondition: 0 3 * * * doing something
+  precondition: 0,5,10,15,20,25,30,35,40,45,50,55 * * * * doing something
   retries: 1
   timeout: 1
 
 two:
   id: 2
   action_id: 1
-  precondition: 4 2 * * * doing some more
+  precondition: 1
+  retries: 1
+  timeout: 1
+
+three:
+  id: 3
+  action_id: 2
+  precondition: 1
   retries: 1
   timeout: 1

@@ -7,4 +7,5 @@ class ChainInstance < ActiveRecord::Base
   has_many :child_parent_relationships, :foreign_key => "parent_chain_instance_id", :class_name => "ParentInstance"
   has_many :children, :through => :child_parent_relationships, :source => :parent
   
+  validates_existence_of :chain
 end
