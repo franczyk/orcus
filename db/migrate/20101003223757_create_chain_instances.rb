@@ -3,7 +3,7 @@ class CreateChainInstances < ActiveRecord::Migration
     create_table :chain_instances do |t|
       t.integer :chain_id
       t.boolean :status
-      t.datetime :completed
+      t.datetime :completedtime
       t.datetime :starttime
       t.integer :timeout
 

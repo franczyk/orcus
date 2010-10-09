@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101008022121) do
+ActiveRecord::Schema.define(:version => 20101008222512) do
 
   create_table "actions", :force => true do |t|
     t.string   "description"
@@ -30,11 +30,12 @@ ActiveRecord::Schema.define(:version => 20101008022121) do
   create_table "chain_instances", :force => true do |t|
     t.integer  "chain_id"
     t.boolean  "status"
-    t.datetime "completed"
+    t.datetime "completedtime"
     t.datetime "starttime"
     t.integer  "timeout"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "completed"
   end
 
   create_table "chains", :force => true do |t|

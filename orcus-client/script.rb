@@ -5,6 +5,7 @@ Dir["../app/models/*.rb"].each {|file| require file }
 
 require 'socket'
 DEBUG=1
+RUNEVERYTIME=0
 hostname = Socket.gethostname
 h=Host.find_by_name(hostname)
 if h.nil?
@@ -49,18 +50,11 @@ end
 
 ###################################
 def ArchiveChainInstanceTree(ci)
-  # Archive this to another table.
-  # puts "NEED TO CREATE ARCHIVING" if DEBUG == 1
-  # if ci.parents.any? 
-  #   ci.parents.each do |p|
-  #      puts "parent id = " + p.id.to_s if DEBUG == 1
-  #   end
-  # else
-  #   puts "No Parents exist."
-  # end
+
   children = ci.children
   puts "archiving : " + ci.id.to_s if DEBUG == 1
-  ChainInstance.delete(ci.id)  
+  ci.completed = true
+  ci.save
   
   children.each do |child|
     ArchiveChainInstanceTree(ci)
@@ -114,7 +108,7 @@ def RunAllBottomEntries(ci)
 		puts "It is still running.  Waiting for it to time out or complete: " + ci.chain.action.command if DEBUG == 1
 	elsif isTimedOut(ci)
 	  puts "Timed out: " + ci.id.to_s if DEBUG == 1
-	  ci.completed = Time.now
+	  ci.completedtime = Time.now
 	  ci.status = 0
 	  ci.save
 	  
@@ -162,7 +156,7 @@ end
 
 ###################################
 def isOpen(instance)
-	unless instance.completed.nil?
+	unless instance.completedtime.nil?
 		return true
 	end
 	return false
@@ -193,13 +187,21 @@ def isCronStyleEntry(cronentry)
 end
 
 def isSameTime(crontime, currenttime)
+ 
   if crontime == "*"
     return true
   end
-  if crontime == currenttime 
+   crontimei = crontime.to_i
+   currenttimei = currenttime.to_i
+   puts "Passed crontime '" + crontime.to_s + "' and currenttime '" + currenttime.to_s + "'"
+   
+  if crontimei == currenttimei 
     return true
   end
-  if cronarray.include? ","
+  puts crontime.to_s + " is not equal to " + currenttime.to_s
+  
+  puts "checking for commas"
+  if crontime.include? ","
     cronarray = crontime.split(/,/)
     cronarray.each do |time|
       if time == currenttime 
@@ -227,7 +229,7 @@ def isRightTime(chain)
   # TODO Allow for comma delimited time statements within the Cron entry.
   # The cron current allows for exact hour,minute,second,etc., or * for wildcard.
   
-  if DEBUG == 1
+  if RUNEVERYTIME == 1
     puts "returning true for isRightTime" if DEBUG == 1
     return true
   end
@@ -258,9 +260,11 @@ def CheckAllActions(pool)
         puts "Found a chain: " + c.chain_instances.count.to_s if DEBUG == 1
        # if c.active == true  # TODO:  create an active flag for chains  .. THink about this first... should i be doing it from automations?
           if isRightTime(c)
+            instances = c.chain_instances.find_all_by_completed("0")
             puts "look for instances" if DEBUG == 1
-            if c.chain_instances.any?
+            if instances.any?
               # Check all chain instances.
+              
               c.chain_instances.each do |ci|
                 puts "found an existing instance: " + ci.id.to_s if DEBUG == 1
                 ransomething = RunAllBottomEntries(ci)
@@ -270,7 +274,17 @@ def CheckAllActions(pool)
               end  # c.chain_instances
             
             else # if c.chain_instances.any?
-              createInstance(c)
+              puts "looking for existing instances of this chain that started in this minute." if DEBUG==1
+              mySQL = %{ select * from chain_instances where concat(DATE_FORMAT(now(),'%y-%m-%d'), " ", hour(now()), ":", minute(now()) )  = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " ", hour(starttime), ":", minute(starttime))  and chain_id = } + c.id.to_s + ";" 
+              puts mySQL
+              instances = ChainInstance.find_by_sql(mySQL)
+                #     select * from chain_instances where starttime = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " " ,
+                #     hour(starttime),":", minute(starttime)) ;
+              unless instances.any?
+                createInstance(c)
+              else
+                puts "A chain has already started this minute." if DEBUG==1
+              end
             end # if c.chain_instances.any?
           end
       #  end  # c.active
@@ -291,7 +305,7 @@ def createInstance(c)
     ci.save
     rc = runChainInstance(ci)
     ci.status = rc
-    ci.completed = Time.now
+    ci.completedtime = Time.now
 end
 
 
