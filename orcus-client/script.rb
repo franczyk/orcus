@@ -1,5 +1,5 @@
 #!/usr/bin/ruby
-#require 'config/schema'
+
 require 'config/database_configuration.rb'
 Dir["../app/models/*.rb"].each {|file| require file }
 
@@ -19,19 +19,9 @@ puts "Logging last checkin for " + hostname if DEBUG == 1
 h.last_checkin = Time.now
 h.save
 
-
-
-### TODOs:
-### validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
-### Move all this business logic into a web service/ controller.  
-# =>  Call it via a basic "controller.xml", and have it return the stuff that needs to run.
-
-### Retries need to be honored.
-
-### WISHLISTS
-### Trap the output of the system() command.
-### Allow for mulitple parents, multiple children.  - It appears to already be done!
-
+# TO DO:
+# Make a chain type that references ANOTHER existing chain. (to allow nesting)
+# Or, allow chains to reference the Automations table (which is not as good)
 
 
 ###################################
@@ -41,7 +31,7 @@ def getTopParent(ci)
   if ci.parents.any?
     ci.parents.each do |p|
       parent=p
-      getTopParent(parent)
+      parent = getTopParent(parent)
     end
   end
   
@@ -92,13 +82,15 @@ end
 
 ###################################
 def runChildren(ci)
-  puts "running children: " + ci.id.to_s if DEBUG == 1
+  puts "looking for children: " + ci.id.to_s if DEBUG == 1
   ci.chain.children.each do |child|
-    childinstance = child.chain_instances.create
-    childinstance.starttime = Time.now
-    childinstance.timeout = child.timeout 
-    childinstance.save
-    return runChainInstance(ci)
+    if child.action.pool.hosts.find_by_name(hostname)
+      childinstance = child.chain_instances.create
+      childinstance.starttime = Time.now
+      childinstance.timeout = child.timeout 
+      childinstance.save
+      runChainInstance(ci,0)
+    end
   end
 end
 
@@ -108,7 +100,7 @@ def runFalseChild(ci)
   ci.children.each do |cic|
     puts "checking " if DEBUG == 1
     if cic.chain.precondition == 0 
-      return runChainInstance(cic)
+      return runChainInstance(cic,0)
     end
   end
 end
@@ -218,7 +210,7 @@ def isSameTime(crontime, currenttime)
     puts "found commas " if DEBUG==1
     cronarray = crontime.split(/,/)
     cronarray.each do |time|
-      puts "comparing " + currenttime.to_s + " to " + time.to_s if DEBUG==1
+ #     puts "comparing " + currenttime.to_s + " to " + time.to_s if DEBUG==1
       if time.to_i == currenttime.to_i 
         puts "Match! " if DEBUG==1
         return true
@@ -230,12 +222,16 @@ end
 
 
 ###################################
-def isRightTime(chain)
+def isRightTimeForNew(chain)
   cronentry = chain.precondition
   unless isCronStyleEntry(chain.precondition)
-    if chain.precondition == 1 
+    if chain.precondition == "1"
+      # TODO:  CHECK TO SEE IF PAREENT ACTUALLY EXITED SUCCESSFULLY!
+      puts "Run it if the previous entry was ok" if DEBUG==1
       return true
     else
+      puts "precon = " +  chain.precondition.to_s if DEBUG==1
+      puts "Run it if the previous entry was errored" if DEBUG==1
       return false
     end
   end
@@ -261,6 +257,39 @@ def isRightTime(chain)
 end
 
 
+###################################
+def parentInstancesDone(pis)
+  done=true
+  unless pis.nil?
+    pis.each do |pi|
+      if pi.completedtime.nil?
+        done=false
+      end
+    end
+  end
+  return done
+end
+
+
+###################################
+def getParentInstances(c)
+  pis = nil
+  c.parents.each do |p|
+    p.chain_instances do |ci|
+      pis << ci
+    end
+  end
+  return pis
+end
+
+
+
+###################################
+def currentInstanceExists(c)
+  # currently assumes that each chain can only run one at a time!
+  return c.chain_instances.find_all_by_completed_and_status("0", nil).any?
+end
+
 
 ###################################
 def CheckAllActions(pool)
@@ -274,34 +303,54 @@ def CheckAllActions(pool)
     begin
       a.chains.each do |c|
         puts "Found a chain: " + c.chain_instances.count.to_s if DEBUG == 1
-       # if c.active == true  # TODO:  create an active flag for chains  .. THink about this first... should i be doing it from automations?
-          if isRightTime(c)
-            instances = c.chain_instances.find_all_by_completed("0")
-            puts "look for instances" if DEBUG == 1
-            if instances.any?
+
+        pis = getParentInstances(c)
+          puts "got parent instances" if DEBUG==1
+          if parentInstancesDone(pis)
+            puts "parent instances are done" if DEBUG==1
+            unless currentInstanceExists(c)
+              puts "current instance does not exist."
+              #createInstance(c) # should this be RunAllBottomEntries?
+              unless pis.nil?
+                pis.each do |ci|
+                  ransomething = RunAllBottomEntries(ci)
+                  # I could do archivng elsewhere...
+                  if ransomething == true || ransomething.nil? # really? true or nil? check this.
+                    ArchiveChainInstanceTree(ci)
+                  end
+                end
+              end
+            end
+          end
+
+          #all archiving is done from server that top Parent gets called from?
+          unless c.parents.any?
+            c.chain_instances.find_all_by_completed("0").each do |ci|
+              tp = getTopParent(ci)
+              unless openInstancesInTree(tp)
+                ArchiveChainInstanceTree(tp)
+              end
+            end
+          end
+
+          if isRightTimeForNew(c)
+            if currentInstanceExists(c)
               # Check all chain instances.
-              
               c.chain_instances.each do |ci|
                 puts "found an existing instance: " + ci.id.to_s if DEBUG == 1
                 ransomething = RunAllBottomEntries(ci)
                 if ransomething == true || ransomething.nil?
                    ArchiveChainInstanceTree(ci) 
-                end  
+                end
               end  # c.chain_instances
-            
             else # if c.chain_instances.any?
-              puts "looking for existing instances of this chain that started in this minute." if DEBUG==1
-              mySQL = %{ select * from chain_instances where concat(DATE_FORMAT(now(),'%y-%m-%d'), " ", hour(now()), ":", minute(now()) )  = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " ", hour(starttime), ":", minute(starttime))  and chain_id = } + c.id.to_s + ";" 
-              puts mySQL
-              instances = ChainInstance.find_by_sql(mySQL)
-                #     select * from chain_instances where starttime = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " " ,
-                #     hour(starttime),":", minute(starttime)) ;
-              unless instances.any?
+              unless alreadyStartedThisOne(c)
                 createInstance(c)
               else
                 puts "A chain has already started this minute." if DEBUG==1
               end
             end # if c.chain_instances.any?
+              
           end
       #  end  # c.active
       end # a.chains
@@ -312,6 +361,14 @@ def CheckAllActions(pool)
   
 end
 
+##################################
+def alreadyStartedThisOne(c)
+  # This checks to see if an isntances has already been started AND CLOSED
+  puts "looking for existing instances of this chain that started in this minute." if DEBUG==1
+  mySQL = %{ select * from chain_instances where concat(DATE_FORMAT(now(),'%y-%m-%d'), " ", hour(now()), ":", minute(now()) )  = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " ", hour(starttime), ":", minute(starttime))  and chain_id = } + c.id.to_s + ";"
+  puts mySQL
+  return ChainInstance.find_by_sql(mySQL).any?
+end
 
 def createInstance(c)
     puts "creating a new instance" if DEBUG == 1
@@ -319,7 +376,7 @@ def createInstance(c)
     ci.starttime = Time.now
     ci.timeout = ci.chain.timeout
     ci.save
-    rc = runChainInstance(ci)
+    rc = runChainInstance(ci,0)
     ci.status = rc
     ci.completedtime = Time.now
 end

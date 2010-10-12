@@ -20,7 +20,19 @@ parent action.
 
 == TODOS and Design issues:
 
-- Children can have only one parent action.  But parents can have multiple children.
+- validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
+- Move all this business logic into a web service/ controller.  
+     Call it via a basic "controller.xml", and have it return the stuff that needs to run.
+- Keys exchanged on first connections.
+- Start an action via a script, rather than crontime.
+- Call actions between browsers via websockets.
+
+
+### WISHLISTS
+### Trap the output of the system() command.
+### Allow for mulitple parents, multiple children.  - It appears to already be done!
+
+
 
 
 == Getting started:

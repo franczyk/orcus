@@ -9,14 +9,14 @@ one:
 
 two:
   id: 2
-  action_id: 1
+  action_id: 2
   precondition: 1
   retries: 1
   timeout: 1
 
 three:
   id: 3
-  action_id: 2
+  action_id: 3
   precondition: 1
   retries: 1
   timeout: 1
