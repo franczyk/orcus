@@ -1,6 +1,15 @@
 <p>
   <b>Name:</b>
   <%=h @pool.name %>
+  <br>
+  <br>
+  Host List:<br/>
+  <ul>
+  <% @pool.hosts.each do |host| %>
+    <li><%=h host.name %></li>
+  <% end %>
+</ul>
+Count: <%=h @pool.hosts.length.to_s %>
 </p>
 
 

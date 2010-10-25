@@ -8,6 +8,7 @@
 <% @hosts.each do |host| %>
   <tr>
     <td><%=h host.name %></td>
+    <td><%=h "Pools: " + host.pools.length.to_s %></td>
     <td><%= link_to 'Show', host %></td>
     <td><%= link_to 'Edit', edit_host_path(host) %></td>
     <td><%= link_to 'Destroy', host, :confirm => 'Are you sure?', :method => :delete %></td>
