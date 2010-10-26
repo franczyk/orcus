@@ -1,11 +1,32 @@
 <p>
   <b>Action:</b>
-  <%=h @chain.action_id %>
+  <%=h @chain.action.description %>
 </p>
 
 <p>
   <b>Condition:</b>
-  <%=h @chain.condition %>
+  <%=h @chain.precondition %>
+  <br>
+  <br>
+  Parents:
+  <ul>
+    <% @chain.parents.each do |p| %>
+      <li><%=h p.action.description %></li>
+    <% end %>
+    <% unless @chain.parents.any? %>
+      <li>None</li>
+    <% end %>
+  </ul>
+  <br>
+  Children:
+  <ul>
+    <% @chain.children.each do |c| %>
+      <li> <%= link_to(c.action.description, :controller => "chains", :action => "show", :id => c.id ) %> </li>
+    <% end %>
+    <% unless @chain.children.any? %>
+      <li>None</li>
+    <% end %>
+  </ul>
 </p>
 
 <p>

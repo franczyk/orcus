@@ -5,11 +5,13 @@
 
   <p>
     <%= f.label :action_id %><br />
-    <%= f.text_field :action_id %>
+    <%#= f.text_field :action_id %>
+    <%#= collection_select(:replication_target, :source_id, mysources, :id, :description, { :include_blank => "None" },  {:onchange => "document.forms[0].active.disabled=false;" } ) %> 
+    <%= collection_select(:chain, :action_id, Action.all, :id, :description, { :include_blank => "None" } ) %> 
   </p>
   <p>
-    <%= f.label :condition %><br />
-    <%= f.text_field :condition %>
+    <%= f.label :precondition %><br />
+    <%= f.text_field :precondition %>
   </p>
   <p>
     <%= f.label :retries %><br />

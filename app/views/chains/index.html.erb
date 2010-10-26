@@ -3,6 +3,7 @@
 <table>
   <tr>
     <th>Action</th>
+    <th>Description</th>
     <th>Condition</th>
     <th>Retries</th>
     <th>Pool</th>
@@ -11,6 +12,7 @@
 <% @chains.each do |chain| %>
   <tr>
     <td><%=h chain.action_id %></td>
+    <td><%=h chain.action.description %></td>
     <td><%=h chain.precondition %></td>
     <td><%=h chain.retries %></td>
     <td><%=h chain.action.pool.name %></td>
