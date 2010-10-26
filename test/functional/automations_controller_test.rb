@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class AutomationsControllerTest < ActionController::TestCase
+  setup do
+    @automation = automations(:one)
+  end
+
   test "should get index" do
     get :index
     assert_response :success
@@ -14,30 +18,30 @@ class AutomationsControllerTest < ActionController::TestCase
 
   test "should create automation" do
     assert_difference('Automation.count') do
-      post :create, :automation => { }
+      post :create, :automation => @automation.attributes
     end
 
     assert_redirected_to automation_path(assigns(:automation))
   end
 
   test "should show automation" do
-    get :show, :id => automations(:one).to_param
+    get :show, :id => @automation.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => automations(:one).to_param
+    get :edit, :id => @automation.to_param
     assert_response :success
   end
 
   test "should update automation" do
-    put :update, :id => automations(:one).to_param, :automation => { }
+    put :update, :id => @automation.to_param, :automation => @automation.attributes
     assert_redirected_to automation_path(assigns(:automation))
   end
 
   test "should destroy automation" do
     assert_difference('Automation.count', -1) do
-      delete :destroy, :id => automations(:one).to_param
+      delete :destroy, :id => @automation.to_param
     end
 
     assert_redirected_to automations_path

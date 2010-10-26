@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class HostPoolmapsControllerTest < ActionController::TestCase
+  setup do
+    @host_poolmap = host_poolmaps(:one)
+  end
+
   test "should get index" do
     get :index
     assert_response :success
@@ -14,30 +18,30 @@ class HostPoolmapsControllerTest < ActionController::TestCase
 
   test "should create host_poolmap" do
     assert_difference('HostPoolmap.count') do
-      post :create, :host_poolmap => { }
+      post :create, :host_poolmap => @host_poolmap.attributes
     end
 
     assert_redirected_to host_poolmap_path(assigns(:host_poolmap))
   end
 
   test "should show host_poolmap" do
-    get :show, :id => host_poolmaps(:one).to_param
+    get :show, :id => @host_poolmap.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => host_poolmaps(:one).to_param
+    get :edit, :id => @host_poolmap.to_param
     assert_response :success
   end
 
   test "should update host_poolmap" do
-    put :update, :id => host_poolmaps(:one).to_param, :host_poolmap => { }
+    put :update, :id => @host_poolmap.to_param, :host_poolmap => @host_poolmap.attributes
     assert_redirected_to host_poolmap_path(assigns(:host_poolmap))
   end
 
   test "should destroy host_poolmap" do
     assert_difference('HostPoolmap.count', -1) do
-      delete :destroy, :id => host_poolmaps(:one).to_param
+      delete :destroy, :id => @host_poolmap.to_param
     end
 
     assert_redirected_to host_poolmaps_path

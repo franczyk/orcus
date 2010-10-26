@@ -6,7 +6,7 @@
   Host List:<br/>
   <ul>
   <% @pool.hosts.each do |host| %>
-    <li><%=h host.name %></li>
+    <li><%=h link_to(host.name , :controller => "hosts", :action => "show", :id => host.id) %></li>
   <% end %>
 </ul>
 Count: <%=h @pool.hosts.length.to_s %>

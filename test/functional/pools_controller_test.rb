@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class PoolsControllerTest < ActionController::TestCase
+  setup do
+    @pool = pools(:one)
+  end
+
   test "should get index" do
     get :index
     assert_response :success
@@ -14,30 +18,30 @@ class PoolsControllerTest < ActionController::TestCase
 
   test "should create pool" do
     assert_difference('Pool.count') do
-      post :create, :pool => { }
+      post :create, :pool => @pool.attributes
     end
 
     assert_redirected_to pool_path(assigns(:pool))
   end
 
   test "should show pool" do
-    get :show, :id => pools(:one).to_param
+    get :show, :id => @pool.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => pools(:one).to_param
+    get :edit, :id => @pool.to_param
     assert_response :success
   end
 
   test "should update pool" do
-    put :update, :id => pools(:one).to_param, :pool => { }
+    put :update, :id => @pool.to_param, :pool => @pool.attributes
     assert_redirected_to pool_path(assigns(:pool))
   end
 
   test "should destroy pool" do
     assert_difference('Pool.count', -1) do
-      delete :destroy, :id => pools(:one).to_param
+      delete :destroy, :id => @pool.to_param
     end
 
     assert_redirected_to pools_path

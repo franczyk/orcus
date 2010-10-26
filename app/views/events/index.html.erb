@@ -6,14 +6,17 @@
     <th>Action</th>
     <th>Date</th>
     <th>Description</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @events.each do |event| %>
   <tr>
-    <td><%=h event.chain_id %></td>
-    <td><%=h event.action_id %></td>
-    <td><%=h event.date %></td>
-    <td><%=h event.description %></td>
+    <td><%= event.chain_id %></td>
+    <td><%= event.action_id %></td>
+    <td><%= event.date %></td>
+    <td><%= event.description %></td>
     <td><%= link_to 'Show', event %></td>
     <td><%= link_to 'Edit', edit_event_path(event) %></td>
     <td><%= link_to 'Destroy', event, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -23,4 +26,4 @@
 
 <br />
 
-<%= link_to 'New event', new_event_path %>
+<%= link_to 'New Event', new_event_path %>

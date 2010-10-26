@@ -4,14 +4,17 @@
   <tr>
     <th>Chain</th>
     <th>Active</th>
-    <th>Condition</th>
+    <th>Precondition</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @automations.each do |automation| %>
   <tr>
-    <td><%=h automation.chain_id %></td>
-    <td><%=h automation.active %></td>
-    <td><%=h automation.precondition %></td>
+    <td><%= automation.chain_id %></td>
+    <td><%= automation.active %></td>
+    <td><%= automation.precondition %></td>
     <td><%= link_to 'Show', automation %></td>
     <td><%= link_to 'Edit', edit_automation_path(automation) %></td>
     <td><%= link_to 'Destroy', automation, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -21,4 +24,4 @@
 
 <br />
 
-<%= link_to 'New automation', new_automation_path %>
+<%= link_to 'New Automation', new_automation_path %>

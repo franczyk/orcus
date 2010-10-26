@@ -1,43 +1,6 @@
-ORCUS
+This should not be talking directly to the database.
 
-# This project is not yet operational...
+Instead, it needs to load its objects via REST interface.  
+Perhaps activerecord isnt the right tool, perhaps datamapper?
 
-Orcus is a distributed automation system, much like AutoSys, UC4, or Tidal.  Its 
-designed as a 'distributed cron' where one node can have tasks that depend on tasks 
-occurring on other nodes.  Tasks can be retried multiple times, and if they fail, 
-they notify the appropriate people. 
-
-This orcus project is the web front end for managing the system.
-The orcus-client is the client side node app that communicates with the database.
-
-== The Design:
-
-Nodes are grouped into "pools" that can be associated with "actions".  An action 
-can occur on one or all nodes in a pool.  "Chains" are connected chains of actions
-in a parent-child relationship.  The child action occurs after the parent action.  
-Child actions can be set to run either after a successful parent or after a failed 
-parent action.
-
-== TODOS and Design issues:
-
-- validate that parent_chain_id exists in chains, validate that child_chain_id exists in chains;
-- Move all this business logic into a web service/ controller.  
-     Call it via a basic "controller.xml", and have it return the stuff that needs to run.
-- Keys exchanged on first connections.
-- Start an action via a script, rather than crontime.
-- Call actions between browsers via websockets.
-
-
-### WISHLISTS
-### Trap the output of the system() command.
-### Allow for mulitple parents, multiple children.  - It appears to already be done!
-
-
-
-
-== Getting started:
-
-Create an empty database and point the web portion at it via editing the 
-config/database.rb file.
-Run "rake db:reset"
-
+It needs to have its own authentication system as well.

@@ -1,20 +1,6 @@
 <h1>Editing parent</h1>
 
-<% form_for(@parent) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :parent_chain_id %><br />
-    <%= f.text_field :parent_chain_id %>
-  </p>
-  <p>
-    <%= f.label :child_chain_id %><br />
-    <%= f.text_field :child_chain_id %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+<%= render 'form' %>
 
 <%= link_to 'Show', @parent %> |
 <%= link_to 'Back', parents_path %>

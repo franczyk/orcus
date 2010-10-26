@@ -1,24 +1,6 @@
 <h1>Editing automation</h1>
 
-<% form_for(@automation) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :chain_id %><br />
-    <%= f.text_field :chain_id %>
-  </p>
-  <p>
-    <%= f.label :active %><br />
-    <%= f.check_box :active %>
-  </p>
-  <p>
-    <%= f.label :precondition %><br />
-    <%= f.text_field :precondition %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+<%= render 'form' %>
 
 <%= link_to 'Show', @automation %> |
 <%= link_to 'Back', automations_path %>

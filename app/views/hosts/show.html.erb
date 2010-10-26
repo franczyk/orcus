@@ -1,6 +1,21 @@
+<p id="notice"><%= notice %></p>
+
 <p>
   <b>Name:</b>
-  <%=h @host.name %>
+  <%= @host.name %>
+  <br>
+  <br>
+  Pools:
+  <ul>
+    <%=h @host.pools.each do |p| %>
+      <li><%=h p.name %></li>
+    <% end %>
+  </ul>
+</p>
+
+<p>
+  <b>Last checkin:</b>
+  <%= @host.last_checkin %>
 </p>
 
 

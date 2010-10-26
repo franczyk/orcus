@@ -3,12 +3,16 @@
 <table>
   <tr>
     <th>Name</th>
+    <th>Last checkin</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @hosts.each do |host| %>
   <tr>
-    <td><%=h host.name %></td>
-    <td><%=h "Pools: " + host.pools.length.to_s %></td>
+    <td><%= host.name %></td>
+    <td><%= host.last_checkin %></td>
     <td><%= link_to 'Show', host %></td>
     <td><%= link_to 'Edit', edit_host_path(host) %></td>
     <td><%= link_to 'Destroy', host, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -18,4 +22,4 @@
 
 <br />
 
-<%= link_to 'New host', new_host_path %>
+<%= link_to 'New Host', new_host_path %>

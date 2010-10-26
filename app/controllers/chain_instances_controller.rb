@@ -44,7 +44,7 @@ class ChainInstancesController < ApplicationController
 
     respond_to do |format|
       if @chain_instance.save
-        format.html { redirect_to(@chain_instance, :notice => 'ChainInstance was successfully created.') }
+        format.html { redirect_to(@chain_instance, :notice => 'Chain instance was successfully created.') }
         format.xml  { render :xml => @chain_instance, :status => :created, :location => @chain_instance }
       else
         format.html { render :action => "new" }
@@ -60,7 +60,7 @@ class ChainInstancesController < ApplicationController
 
     respond_to do |format|
       if @chain_instance.update_attributes(params[:chain_instance])
-        format.html { redirect_to(@chain_instance, :notice => 'ChainInstance was successfully updated.') }
+        format.html { redirect_to(@chain_instance, :notice => 'Chain instance was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

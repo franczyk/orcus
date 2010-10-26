@@ -4,18 +4,21 @@
   <tr>
     <th>Chain</th>
     <th>Status</th>
-    <th>Completed</th>
+    <th>Completedtime</th>
     <th>Starttime</th>
     <th>Timeout</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @chain_instances.each do |chain_instance| %>
   <tr>
-    <td><%=h chain_instance.chain_id %></td>
-    <td><%=h chain_instance.status %></td>
-    <td><%=h chain_instance.completed %></td>
-    <td><%=h chain_instance.starttime %></td>
-    <td><%=h chain_instance.timeout %></td>
+    <td><%= chain_instance.chain_id %></td>
+    <td><%= chain_instance.status %></td>
+    <td><%= chain_instance.completedtime %></td>
+    <td><%= chain_instance.starttime %></td>
+    <td><%= chain_instance.timeout %></td>
     <td><%= link_to 'Show', chain_instance %></td>
     <td><%= link_to 'Edit', edit_chain_instance_path(chain_instance) %></td>
     <td><%= link_to 'Destroy', chain_instance, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -25,4 +28,4 @@
 
 <br />
 
-<%= link_to 'New chain_instance', new_chain_instance_path %>
+<%= link_to 'New Chain instance', new_chain_instance_path %>

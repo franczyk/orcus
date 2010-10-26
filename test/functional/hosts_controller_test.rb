@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class HostsControllerTest < ActionController::TestCase
+  setup do
+    @host = hosts(:one)
+  end
+
   test "should get index" do
     get :index
     assert_response :success
@@ -14,30 +18,30 @@ class HostsControllerTest < ActionController::TestCase
 
   test "should create host" do
     assert_difference('Host.count') do
-      post :create, :host => { }
+      post :create, :host => @host.attributes
     end
 
     assert_redirected_to host_path(assigns(:host))
   end
 
   test "should show host" do
-    get :show, :id => hosts(:one).to_param
+    get :show, :id => @host.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => hosts(:one).to_param
+    get :edit, :id => @host.to_param
     assert_response :success
   end
 
   test "should update host" do
-    put :update, :id => hosts(:one).to_param, :host => { }
+    put :update, :id => @host.to_param, :host => @host.attributes
     assert_redirected_to host_path(assigns(:host))
   end
 
   test "should destroy host" do
     assert_difference('Host.count', -1) do
-      delete :destroy, :id => hosts(:one).to_param
+      delete :destroy, :id => @host.to_param
     end
 
     assert_redirected_to hosts_path

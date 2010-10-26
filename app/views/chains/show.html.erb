@@ -4,14 +4,14 @@
 </p>
 
 <p>
-  <b>Condition:</b>
+  <b>Precondition:</b>
   <%=h @chain.precondition %>
   <br>
   <br>
   Parents:
   <ul>
     <% @chain.parents.each do |p| %>
-      <li><%=h p.action.description %></li>
+      <li><%=h link_to(p.action.description, :controller => "chains", :action => "show", :id => p.id )  %></li>
     <% end %>
     <% unless @chain.parents.any? %>
       <li>None</li>

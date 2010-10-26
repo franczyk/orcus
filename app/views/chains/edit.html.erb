@@ -1,26 +1,6 @@
 <h1>Editing chain</h1>
 
-<% form_for(@chain) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :action_id %><br />
-    <%#= f.text_field :action_id %>
-    <%#= collection_select(:replication_target, :source_id, mysources, :id, :description, { :include_blank => "None" },  {:onchange => "document.forms[0].active.disabled=false;" } ) %> 
-    <%= collection_select(:chain, :action_id, Action.all, :id, :description, { :include_blank => "None" } ) %> 
-  </p>
-  <p>
-    <%= f.label :precondition %><br />
-    <%= f.text_field :precondition %>
-  </p>
-  <p>
-    <%= f.label :retries %><br />
-    <%= f.text_field :retries %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+<%= render 'form' %>
 
 <%= link_to 'Show', @chain %> |
 <%= link_to 'Back', chains_path %>

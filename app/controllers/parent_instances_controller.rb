@@ -44,7 +44,7 @@ class ParentInstancesController < ApplicationController
 
     respond_to do |format|
       if @parent_instance.save
-        format.html { redirect_to(@parent_instance, :notice => 'ParentInstance was successfully created.') }
+        format.html { redirect_to(@parent_instance, :notice => 'Parent instance was successfully created.') }
         format.xml  { render :xml => @parent_instance, :status => :created, :location => @parent_instance }
       else
         format.html { render :action => "new" }
@@ -60,7 +60,7 @@ class ParentInstancesController < ApplicationController
 
     respond_to do |format|
       if @parent_instance.update_attributes(params[:parent_instance])
-        format.html { redirect_to(@parent_instance, :notice => 'ParentInstance was successfully updated.') }
+        format.html { redirect_to(@parent_instance, :notice => 'Parent instance was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

@@ -3,13 +3,13 @@
 one:
   chain_id: 1
   status: false
-  completed: 2010-10-03 18:37:57
+  completedtime: 2010-10-03 18:37:57
   starttime: 2010-10-03 18:37:57
   timeout: 1
 
 two:
   chain_id: 1
   status: false
-  completed: 2010-10-03 18:37:57
+  completedtime: 2010-10-03 18:37:57
   starttime: 2010-10-03 18:37:57
   timeout: 1

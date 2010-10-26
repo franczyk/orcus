@@ -44,7 +44,7 @@ class HostPoolmapsController < ApplicationController
 
     respond_to do |format|
       if @host_poolmap.save
-        format.html { redirect_to(@host_poolmap, :notice => 'HostPoolmap was successfully created.') }
+        format.html { redirect_to(@host_poolmap, :notice => 'Host poolmap was successfully created.') }
         format.xml  { render :xml => @host_poolmap, :status => :created, :location => @host_poolmap }
       else
         format.html { render :action => "new" }
@@ -60,7 +60,7 @@ class HostPoolmapsController < ApplicationController
 
     respond_to do |format|
       if @host_poolmap.update_attributes(params[:host_poolmap])
-        format.html { redirect_to(@host_poolmap, :notice => 'HostPoolmap was successfully updated.') }
+        format.html { redirect_to(@host_poolmap, :notice => 'Host poolmap was successfully updated.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

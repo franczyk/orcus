@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class ParentsControllerTest < ActionController::TestCase
+  setup do
+    @parent = parents(:one)
+  end
+
   test "should get index" do
     get :index
     assert_response :success
@@ -14,30 +18,30 @@ class ParentsControllerTest < ActionController::TestCase
 
   test "should create parent" do
     assert_difference('Parent.count') do
-      post :create, :parent => { }
+      post :create, :parent => @parent.attributes
     end
 
     assert_redirected_to parent_path(assigns(:parent))
   end
 
   test "should show parent" do
-    get :show, :id => parents(:one).to_param
+    get :show, :id => @parent.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => parents(:one).to_param
+    get :edit, :id => @parent.to_param
     assert_response :success
   end
 
   test "should update parent" do
-    put :update, :id => parents(:one).to_param, :parent => { }
+    put :update, :id => @parent.to_param, :parent => @parent.attributes
     assert_redirected_to parent_path(assigns(:parent))
   end
 
   test "should destroy parent" do
     assert_difference('Parent.count', -1) do
-      delete :destroy, :id => parents(:one).to_param
+      delete :destroy, :id => @parent.to_param
     end
 
     assert_redirected_to parents_path

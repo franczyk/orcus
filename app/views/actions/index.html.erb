@@ -3,15 +3,18 @@
 <table>
   <tr>
     <th>Description</th>
-    <th>Action type</th>
+    <th>Command</th>
     <th>Pool</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @actions.each do |action| %>
   <tr>
-    <td><%=h action.description %></td>
-    <td><%=h action.action_type_id %></td>
-    <td><%=h action.pool_id %></td>
+    <td><%= action.description %></td>
+    <td><%= action.command %></td>
+    <td><%= action.pool_id %></td>
     <td><%= link_to 'Show', action %></td>
     <td><%= link_to 'Edit', edit_action_path(action) %></td>
     <td><%= link_to 'Destroy', action, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -21,4 +24,4 @@
 
 <br />
 
-<%= link_to 'New action', new_action_path %>
+<%= link_to 'New Action', new_action_path %>

@@ -4,12 +4,15 @@
   <tr>
     <th>Parent chain instance</th>
     <th>Child chain instance</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @parent_instances.each do |parent_instance| %>
   <tr>
-    <td><%=h parent_instance.parent_chain_instance_id %></td>
-    <td><%=h parent_instance.child_chain_instance_id %></td>
+    <td><%= parent_instance.parent_chain_instance_id %></td>
+    <td><%= parent_instance.child_chain_instance_id %></td>
     <td><%= link_to 'Show', parent_instance %></td>
     <td><%= link_to 'Edit', edit_parent_instance_path(parent_instance) %></td>
     <td><%= link_to 'Destroy', parent_instance, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -19,4 +22,4 @@
 
 <br />
 
-<%= link_to 'New parent_instance', new_parent_instance_path %>
+<%= link_to 'New Parent instance', new_parent_instance_path %>

@@ -4,12 +4,15 @@
   <tr>
     <th>Parent chain</th>
     <th>Child chain</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @parents.each do |parent| %>
   <tr>
-    <td><%=h parent.parent_chain_id %></td>
-    <td><%=h parent.child_chain_id %></td>
+    <td><%= parent.parent_chain_id %></td>
+    <td><%= parent.child_chain_id %></td>
     <td><%= link_to 'Show', parent %></td>
     <td><%= link_to 'Edit', edit_parent_path(parent) %></td>
     <td><%= link_to 'Destroy', parent, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -19,4 +22,4 @@
 
 <br />
 
-<%= link_to 'New parent', new_parent_path %>
+<%= link_to 'New Parent', new_parent_path %>

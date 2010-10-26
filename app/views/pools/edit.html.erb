@@ -1,16 +1,6 @@
 <h1>Editing pool</h1>
 
-<% form_for(@pool) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.submit 'Update' %>
-  </p>
-<% end %>
+<%= render 'form' %>
 
 <%= link_to 'Show', @pool %> |
 <%= link_to 'Back', pools_path %>

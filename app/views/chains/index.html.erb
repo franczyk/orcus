@@ -1,10 +1,10 @@
-<h1>Listing chains</h1>
+<h1>Cron Actions</h1>
 
 <table>
   <tr>
     <th>Action</th>
     <th>Description</th>
-    <th>Condition</th>
+    <th>Precondition</th>
     <th>Retries</th>
     <th>Pool</th>
   </tr>
@@ -15,7 +15,7 @@
     <td><%=h chain.action.description %></td>
     <td><%=h chain.precondition %></td>
     <td><%=h chain.retries %></td>
-    <td><%=h chain.action.pool.name %></td>
+    <td><%=h link_to(chain.action.pool.name, :controller => "pools", :action => "show", :id => chain.action.pool.id) %></td>
     <td><%= link_to 'Show', chain %></td>
     <td><%= link_to 'Edit', edit_chain_path(chain) %></td>
     <td><%= link_to 'Destroy', chain, :confirm => 'Are you sure?', :method => :delete %></td>

@@ -3,12 +3,14 @@
 <table>
   <tr>
     <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
   </tr>
 
 <% @pools.each do |pool| %>
   <tr>
-    <td><%=h pool.name %></td>
-    <td><%=h "Hosts Count: " + pool.hosts.length.to_s %></td>
+    <td><%= pool.name %></td>
     <td><%= link_to 'Show', pool %></td>
     <td><%= link_to 'Edit', edit_pool_path(pool) %></td>
     <td><%= link_to 'Destroy', pool, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -18,4 +20,4 @@
 
 <br />
 
-<%= link_to 'New pool', new_pool_path %>
+<%= link_to 'New Pool', new_pool_path %>

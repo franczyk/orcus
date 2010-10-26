@@ -1,6 +1,10 @@
 require 'test_helper'
 
 class ChainsControllerTest < ActionController::TestCase
+  setup do
+    @chain = chains(:one)
+  end
+
   test "should get index" do
     get :index
     assert_response :success
@@ -14,30 +18,30 @@ class ChainsControllerTest < ActionController::TestCase
 
   test "should create chain" do
     assert_difference('Chain.count') do
-      post :create, :chain => { }
+      post :create, :chain => @chain.attributes
     end
 
     assert_redirected_to chain_path(assigns(:chain))
   end
 
   test "should show chain" do
-    get :show, :id => chains(:one).to_param
+    get :show, :id => @chain.to_param
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, :id => chains(:one).to_param
+    get :edit, :id => @chain.to_param
     assert_response :success
   end
 
   test "should update chain" do
-    put :update, :id => chains(:one).to_param, :chain => { }
+    put :update, :id => @chain.to_param, :chain => @chain.attributes
     assert_redirected_to chain_path(assigns(:chain))
   end
 
   test "should destroy chain" do
     assert_difference('Chain.count', -1) do
-      delete :destroy, :id => chains(:one).to_param
+      delete :destroy, :id => @chain.to_param
     end
 
     assert_redirected_to chains_path

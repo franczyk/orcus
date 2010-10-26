@@ -3,9 +3,8 @@
 development:
   adapter: mysql
   database: orcus_dev
-  host: localhost
   username: root
-  password:
+  password: 
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -13,7 +12,6 @@ development:
 test:
   adapter: mysql
   database: orcus_dev
-  host: localhost
   username: root
   password:
 
