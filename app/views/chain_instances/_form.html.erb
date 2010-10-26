@@ -1,0 +1,37 @@
+<%= form_for(@chain_instance) do |f| %>
+  <% if @chain_instance.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@chain_instance.errors.count, "error") %> prohibited this chain_instance from being saved:</h2>
+
+      <ul>
+      <% @chain_instance.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :chain_id %><br />
+    <%= f.text_field :chain_id %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br />
+    <%= f.check_box :status %>
+  </div>
+  <div class="field">
+    <%= f.label :completedtime %><br />
+    <%= f.datetime_select :completedtime %>
+  </div>
+  <div class="field">
+    <%= f.label :starttime %><br />
+    <%= f.datetime_select :starttime %>
+  </div>
+  <div class="field">
+    <%= f.label :timeout %><br />
+    <%= f.text_field :timeout %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

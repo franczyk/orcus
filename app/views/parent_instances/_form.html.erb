@@ -1,0 +1,25 @@
+<%= form_for(@parent_instance) do |f| %>
+  <% if @parent_instance.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@parent_instance.errors.count, "error") %> prohibited this parent_instance from being saved:</h2>
+
+      <ul>
+      <% @parent_instance.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :parent_chain_instance_id %><br />
+    <%= f.text_field :parent_chain_instance_id %>
+  </div>
+  <div class="field">
+    <%= f.label :child_chain_instance_id %><br />
+    <%= f.text_field :child_chain_instance_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

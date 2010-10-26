@@ -1,0 +1,25 @@
+<%= form_for(@host_poolmap) do |f| %>
+  <% if @host_poolmap.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@host_poolmap.errors.count, "error") %> prohibited this host_poolmap from being saved:</h2>
+
+      <ul>
+      <% @host_poolmap.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :pool_id %><br />
+    <%= f.text_field :pool_id %>
+  </div>
+  <div class="field">
+    <%= f.label :host_id %><br />
+    <%= f.text_field :host_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

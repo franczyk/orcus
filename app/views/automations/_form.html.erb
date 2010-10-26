@@ -1,0 +1,29 @@
+<%= form_for(@automation) do |f| %>
+  <% if @automation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@automation.errors.count, "error") %> prohibited this automation from being saved:</h2>
+
+      <ul>
+      <% @automation.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :chain_id %><br />
+    <%= f.text_field :chain_id %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br />
+    <%= f.check_box :active %>
+  </div>
+  <div class="field">
+    <%= f.label :precondition %><br />
+    <%= f.text_field :precondition %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
