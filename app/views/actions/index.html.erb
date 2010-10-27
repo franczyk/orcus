@@ -14,7 +14,7 @@
   <tr>
     <td><%= action.description %></td>
     <td><%= action.command %></td>
-    <td><%= action.pool_id %></td>
+    <td><%= action.pool.name %></td>
     <td><%= link_to 'Show', action %></td>
     <td><%= link_to 'Edit', edit_action_path(action) %></td>
     <td><%= link_to 'Destroy', action, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -24,4 +24,5 @@
 
 <br />
 
-<%= link_to 'New Action', new_action_path %>
+<%= link_to 'New Action', new_action_path %><br>
+<%= link_to 'Pools', pools_path %>

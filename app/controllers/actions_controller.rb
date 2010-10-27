@@ -57,7 +57,12 @@ class ActionsController < ApplicationController
   # PUT /actions/1.xml
   def update
     @action = Action.find(params[:id])
+  
+    params.each do |p|
+      logger.info "Parameter " + p.to_s
+    end
 
+    
     respond_to do |format|
       if @action.update_attributes(params[:action])
         format.html { redirect_to(@action, :notice => 'Action was successfully updated.') }

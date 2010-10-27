@@ -2,6 +2,17 @@ This should not be talking directly to the database.
 
 Instead, it needs to load its objects via REST interface.  
 
-
 It needs to have its own authentication system as well.
+
+
+INSTALL:
+
+- Create an empty database named orcus_dev
+- Setup the config/database.yml file with the proper username and password for your mysql database
+- cd into the project directory
+- Type 
+	rake db:migrate
+	rake db:fixtures:load
+	rails server start
+
 
