@@ -15,4 +15,3 @@ INSTALL:
 	rake db:fixtures:load
 	rails server start
 
-EDIT README
