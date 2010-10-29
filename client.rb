@@ -1,7 +1,9 @@
 #!/usr/bin/ruby
 
 require 'config/database_configuration.rb'
-Dir["../app/models/*.rb"].each {|file| require file }
+Dir["app/models/*.rb"].each {|file| 
+  require file
+}
 
 require 'socket'
 DEBUG=1
