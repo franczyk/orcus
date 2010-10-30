@@ -1,38 +1,37 @@
-
 class CommandsController < ApplicationController
-    DEBUG=0
-    RUNEVERYTIME=1
+  DEBUG=0
+  RUNEVERYTIME=1
+
+  # Post to this with:
+  # curl -H "Content-Type: application/xml" -d "<status>321</status>" -X POST http://localhost:3002/commands/bountyhunter
+  #
+  def save
+    hostname = params[:id]
+    h = Host.find_by_name(hostname)
+    setupHost(h)
+
+    content = params[:content]
+    logger.info "Content = " + content.to_s
+    logger.info "Status = " + content[:status].to_s
+    logger.info "ChainInstance = " + content[:chainInstance].to_s
+    logger.info "Output = " + content[:output].to_s
+
+  end
+
 
   def show
     hostname = params[:id]
     h = Host.find_by_name(hostname)
+    setupHost(h)
 
-    logger.debug params[:id]
-
-    if h.nil?
-      logger.debug "h is nil!"
-      h = Host.create
-      h.name = hostname
-      h.save
-    end
-    h.last_checkin = Time.now
-    h.save
-  logger.debug "DOING STUFF"
     @action=""
-    if h.pools.any?
-      logger.debug "some stuff"
-    else
-      logger.debug "not any for " + hostname
-    end
-
     h.pools.each do |pool| 
       logger.debug "checking actions.\n"
       @action =  CheckAllActions(pool) + "\n"
-      if @action == "" 
+      if @action == ""
         break
       end
     end
-
     # TODO:  Return commands in an object that can be passed to render :xml.
 
     @host = h
@@ -41,7 +40,20 @@ class CommandsController < ApplicationController
       format.xml  { render :xml => @host }
     end
   end
+end
 
+
+
+###################################
+
+def setupHost(h)
+  if h.nil?
+    h = Host.create
+    h.name = hostname
+    h.save
+  end
+  h.last_checkin = Time.now
+  h.save
 end
 
 ###################################

@@ -19,7 +19,9 @@ Orcus::Application.routes.draw do
 
   resources :pools
 
+  match "/commands/save/:id" => "commands#save" 
   match "/commands/:id" => "commands#show"
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
