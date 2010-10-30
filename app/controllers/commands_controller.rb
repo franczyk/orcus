@@ -2,19 +2,24 @@ class CommandsController < ApplicationController
   DEBUG=0
   RUNEVERYTIME=1
 
-  # Post to this with:
-  # curl -H "Content-Type: application/xml" -d "<status>321</status>" -X POST http://localhost:3002/commands/bountyhunter
+  # Post to this with something like this:
+  # curl -d "<content><status>content from output of script</status><output>outputfrom script</output><chainInstance>123</chainInstance></content>" -H "Content-Type: application/xml" -X POST http://localhost:3002/commands/save/bountyhunter
   #
+
   def save
     hostname = params[:id]
     h = Host.find_by_name(hostname)
     setupHost(h)
 
     content = params[:content]
+    ci = content[:chainInstance]
+    output = content[:output]
+    status = content[:status]
     logger.info "Content = " + content.to_s
-    logger.info "Status = " + content[:status].to_s
-    logger.info "ChainInstance = " + content[:chainInstance].to_s
-    logger.info "Output = " + content[:output].to_s
+    logger.info "Status = " + status
+    logger.info "ChainInstance = " + ci
+    logger.info "Output = " + output
+    #ci = ChainInstance.find(ci)
 
   end
 
