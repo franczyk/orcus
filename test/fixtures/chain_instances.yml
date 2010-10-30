@@ -3,6 +3,7 @@
 one:
   chain_id: 1
   status: false
+  completed: 0
   completedtime: 2010-10-03 18:37:57
   starttime: 2010-10-03 18:37:57
   timeout: 1
@@ -10,6 +11,7 @@ one:
 two:
   chain_id: 1
   status: false
+  completed: 1
   completedtime: 2010-10-03 18:37:57
   starttime: 2010-10-03 18:37:57
   timeout: 1
