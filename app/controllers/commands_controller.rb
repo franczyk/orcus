@@ -6,10 +6,10 @@ class CommandsController < ApplicationController
   # curl -d "<content><status>content from output of script</status><output>outputfrom script</output><chainInstance>123</chainInstance></content>" -H "Content-Type: application/xml" -X POST http://localhost:3002/commands/save/bountyhunter
   #
 
-  def save
+  def saveAction
     hostname = params[:id]
-    h = Host.find_by_name(hostname)
-    setupHost(h)
+    @host = Host.find_by_name(hostname)
+    setupHost(@host)
 
     content = params[:content]
     ci = content[:chainInstance]
@@ -19,18 +19,25 @@ class CommandsController < ApplicationController
     logger.info "Status = " + status
     logger.info "ChainInstance = " + ci
     logger.info "Output = " + output
-    #ci = ChainInstance.find(ci)
+
+    ci = ChainInstance.find(ci)
+    logger.info "chain id = " + ci.chain.id.to_s  
+
+    respond_to do |format|
+      format.html 
+      format.xml { render :xml => @host }
+    end
 
   end
 
 
-  def show
+  def getAvailableAction
     hostname = params[:id]
-    h = Host.find_by_name(hostname)
-    setupHost(h)
+    @host = Host.find_by_name(hostname)
+    setupHost(@host)
 
     @action=""
-    h.pools.each do |pool| 
+    @host.pools.each do |pool| 
       logger.debug "checking actions.\n"
       @action =  CheckAllActions(pool) + "\n"
       if @action == ""
@@ -39,7 +46,6 @@ class CommandsController < ApplicationController
     end
     # TODO:  Return commands in an object that can be passed to render :xml.
 
-    @host = h
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @host }
@@ -99,6 +105,8 @@ end
 
 ###################################
 def runChildren(ci)
+  # TODO : lock ci so that no other instances can create this child in a race
+  # condition
   logger.debug "looking for children: " + ci.id.to_s 
   ci.chain.children.each do |child|
     if child.action.pool.hosts.find_by_name(hostname)

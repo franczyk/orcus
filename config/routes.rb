@@ -19,8 +19,8 @@ Orcus::Application.routes.draw do
 
   resources :pools
 
-  match "/commands/save/:id" => "commands#save" 
-  match "/commands/:id" => "commands#show"
+  match "/commands/save/:id" => "commands#saveAction" 
+  match "/commands/:id" => "commands#getAvailableAction"
 
 
   # The priority is based upon order of creation:
