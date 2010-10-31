@@ -1,3 +1,13 @@
+# TODO:
+#   Retries... should the client record each retry?  Its simpler if you dont
+#   right now.
+#
+#   Write client that pulls next job, and pushes completed jobs.
+#
+#   Authentication - With separate users
+#
+
+
 class CommandsController < ApplicationController
   DEBUG=0
   RUNEVERYTIME=1
@@ -52,7 +62,6 @@ class CommandsController < ApplicationController
     end
   end
 end
-
 
 
 ###################################
