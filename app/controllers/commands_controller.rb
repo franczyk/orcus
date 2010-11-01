@@ -14,7 +14,7 @@ class CommandsController < ApplicationController
   def saveAction
     hostname = params[:id]
     @host = Host.find_by_name(hostname)
-    setupHost(@host)
+    @host = setupHost(@host,hostname)
 
     content = params[:content]
     ci = content[:chainInstance]
@@ -39,7 +39,7 @@ class CommandsController < ApplicationController
   def getAvailableAction
     hostname = params[:id]
     @host = Host.find_by_name(hostname)
-    setupHost(@host)
+    @host = setupHost(@host,hostname)
 
     @action=""
     @host.pools.each do |pool| 
@@ -61,14 +61,24 @@ end
 
 ###################################
 
-def setupHost(h)
+def setupHost(h,hostname)
   if h.nil?
     h = Host.create
     h.name = hostname
+    p = Pool.find_by_name("undefined")
+    if p.nil?
+      p = Pool.create
+      p.name = "undefined"
+      p.save
+      h.pools << p
+    else
+      h.pools << p
+    end
     h.save
   end
   h.last_checkin = Time.now
   h.save
+  return h
 end
 
 ###################################
