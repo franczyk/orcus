@@ -1,2 +1,2 @@
-class Command < ActiveRecord::Base
+class Command < ActiveRecord::BaseWithoutTable
 end

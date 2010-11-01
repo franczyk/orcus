@@ -4,6 +4,7 @@ class CreateChainInstances < ActiveRecord::Migration
       t.integer :chain_id
       t.boolean :status
       t.datetime :completedtime
+      t.boolean :completed
       t.datetime :starttime
       t.integer :timeout
 

@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20101026022759) do
   create_table "chain_instances", :force => true do |t|
     t.integer  "chain_id"
     t.boolean  "status"
+    t.boolean  "completed"
     t.datetime "completedtime"
     t.datetime "starttime"
     t.integer  "timeout"

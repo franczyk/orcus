@@ -1,44 +1,75 @@
+# TODO:
+#   Authentication - With separate users
+#
+
+
 class CommandsController < ApplicationController
-    DEBUG=1
-    RUNEVERYTIME=0
+  DEBUG=0
+  RUNEVERYTIME=1
 
-  def show
-    hostname = Host.find_by_name(params[:id])
-    h = hostname
+  # Post to this with something like this:
+  # curl -d "<content><status>content from output of script</status><output>outputfrom script</output><chainInstance>123</chainInstance></content>" -H "Content-Type: application/xml" -X POST http://localhost:3002/commands/save/bountyhunter
+  #
 
-    if h.nil?
-      h = Host.create
-      h.name = hostname
-      h.save
-    end
-    h.last_checkin = Time.now
-    h.save
+  def saveAction
+    hostname = params[:id]
+    @host = Host.find_by_name(hostname)
+    setupHost(@host)
 
-    begin
-      if h.pools.count > 0
-        if h.pools.any? 
-          h.pools.each do |p|
-            CheckAllActions(p)
-          end
-        end
-      end
-    rescue
-      puts "Caught some crazy issue!" + $! if DEBUG == 1
-    end
+    content = params[:content]
+    ci = content[:chainInstance]
+    output = content[:output]
+    status = content[:status]
+    logger.info "Content = " + content.to_s
+    logger.info "Status = " + status
+    logger.info "ChainInstance = " + ci
+    logger.info "Output = " + output
 
-    @host = h
+    ci = ChainInstance.find(ci)
+    logger.info "chain id = " + ci.chain.id.to_s  
+
     respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @host }
+      format.html 
+      format.xml { render :xml => @host }
     end
+
   end
 
+
+  def getAvailableAction
+    hostname = params[:id]
+    @host = Host.find_by_name(hostname)
+    setupHost(@host)
+
+    @action=""
+    @host.pools.each do |pool| 
+      logger.debug "checking actions.\n"
+      @action =  CheckAllActions(pool)
+      unless @action.nil?
+        break
+      end
+    end
+    # TODO:  Return commands in an object that can be passed to render :xml.
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @action }
+    end
+  end
 end
 
-# TO DO:
-# Make a chain type that references ANOTHER existing chain. (to allow nesting)
-# Or, allow chains to reference the Automations table (which is not as good)
 
+###################################
+
+def setupHost(h)
+  if h.nil?
+    h = Host.create
+    h.name = hostname
+    h.save
+  end
+  h.last_checkin = Time.now
+  h.save
+end
 
 ###################################
 
@@ -59,7 +90,7 @@ end
 def ArchiveChainInstanceTree(ci)
 
   children = ci.children
-  puts "archiving : " + ci.id.to_s if DEBUG == 1
+  logger.debug "archiving : " + ci.id.to_s 
   ci.completed = true
   ci.save
   
@@ -71,50 +102,33 @@ end
 
 ###################################
 def runChainInstance(ci, retrynumber)
-  puts "Running command: " + ci.chain.action.command if DEBUG == 1
-  rc = system(ci.chain.action.command)  
-  if rc
-    ci.status = true
-    ci.save
-    return true
-  else
-    
-    if retrynumber.nil? 
-      retrynumber=0
-    else
-      retrynumber=retrynumber + 1 
-    end
-    
-    if retrynumber >= ci.chain.retries
-      ci.status = false
-      ci.save
-      return false
-    else
-      runChainInstance(ci, retrynumber)
-    end
-    
-  end
+  logger.info "Running command: " + ci.chain.action.command 
+  #return ci.chain.action.command
+  return ci
 end
+
 
 ###################################
 def runChildren(ci)
-  puts "looking for children: " + ci.id.to_s if DEBUG == 1
+  # TODO : lock ci so that no other instances can create this child in a race
+  # condition
+  logger.debug "looking for children: " + ci.id.to_s 
   ci.chain.children.each do |child|
     if child.action.pool.hosts.find_by_name(hostname)
       childinstance = child.chain_instances.create
       childinstance.starttime = Time.now
       childinstance.timeout = child.timeout
       childinstance.save
-      runChainInstance(ci,0)
+      return runChainInstance(ci,0)
     end
   end
 end
 
 ###################################
 def runFalseChild(ci)
-  puts "finding false child."
+  logger.debug "finding false child."
   ci.children.each do |cic|
-    puts "checking " if DEBUG == 1
+    logger.debug "checking " 
     if cic.chain.precondition == 0 
       return runChainInstance(cic,0)
     end
@@ -124,24 +138,24 @@ end
 
 ###################################
 def RunAllBottomEntries(ci)
-  puts "Running all bottom entries." if DEBUG == 1
+  logger.debug "Running all bottom entries." 
   if isOpen(ci)
     # dont touch this one cause its waiting to complete.
-    puts "It is still running.  Waiting for it to time out or complete: " + ci.chain.action.command if DEBUG == 1
+    logger.debug "It is still running.  Waiting for it to time out or complete: " + ci.chain.action.command 
   elsif isTimedOut(ci)
-    puts "Timed out: " + ci.id.to_s if DEBUG == 1
+    logger.debug "Timed out: " + ci.id.to_s 
     ci.completedtime = Time.now
     ci.status = 0
     ci.save
-    runFalseChild(ci)
+    itemToRun = runFalseChild(ci)
     ransomething = true
   else
-    puts "Not timed out, not open.  Closed: " + ci.id.to_s if DEBUG == 1
+    logger.debug "Not timed out, not open.  Closed: " + ci.id.to_s 
     if ci.children.any?
-      puts "There are children: " + ci.id.to_s if DEBUG == 1
+      logger.debug "There are children: " + ci.id.to_s 
       ci.children.each do |child|
         if child.chain.precondition == ci.status
-          rc = RunAllBottomEntries(child)
+          itemToRun = RunAllBottomEntries(child)
           if ransomething == false and rc == true
             ransomething = true
           end
@@ -155,8 +169,8 @@ def RunAllBottomEntries(ci)
     end
   end
 
-  puts "ransomething is set to... '" + ransomething.to_s + "'" if DEBUG == 1
-  return ransomething
+  logger.debug "ransomething is set to... '" + ransomething.to_s + "'" 
+  return itemToRun
 end
 
 ###################################
@@ -175,6 +189,7 @@ def FindChild(ci, success)
     end  
   end
 end
+
 
 ###################################
 def isOpen(instance)
@@ -198,12 +213,12 @@ end
 ###################################
 def isCronStyleEntry(cronentry)
 
-  puts "cronentry = " + cronentry if DEBUG == 1
+  logger.debug "cronentry = " + cronentry 
   if cronentry =~ /^[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s*.*/
-    puts "is a cron style entry" if DEBUG == 1
+    logger.debug "is a cron style entry" 
     return true
   else
-    puts "Not a cron style entry." if DEBUG == 1
+    logger.debug "Not a cron style entry." 
     return false
   end
 end
@@ -215,21 +230,21 @@ def isSameTime(crontime, currenttime)
   end
    crontimei = crontime.to_i
    currenttimei = currenttime.to_i
-   puts "Passed crontime '" + crontime.to_s + "' and currenttime '" + currenttime.to_s + "'"
+   logger.debug "Passed crontime '" + crontime.to_s + "' and currenttime '" + currenttime.to_s + "'"
    
   if crontimei == currenttimei 
     return true
   end
-  puts crontime.to_s + " is not equal to " + currenttime.to_s
+  logger.debug crontime.to_s + " is not equal to " + currenttime.to_s
   
-  puts "checking for commas" if DEBUG==1
+  logger.debug "checking for commas" 
   if crontime.include? ","
-    puts "found commas " if DEBUG==1
+    logger.debug "found commas " 
     cronarray = crontime.split(/,/)
     cronarray.each do |time|
- #     puts "comparing " + currenttime.to_s + " to " + time.to_s if DEBUG==1
+ #     logger.debug "comparing " + currenttime.to_s + " to " + time.to_s 
       if time.to_i == currenttime.to_i 
-        puts "Match! " if DEBUG==1
+        logger.debug "Match! " 
         return true
       end
     end
@@ -244,11 +259,11 @@ def isRightTimeForNew(chain)
   unless isCronStyleEntry(chain.precondition)
     if chain.precondition == "1"
       # TODO:  CHECK TO SEE IF PAREENT ACTUALLY EXITED SUCCESSFULLY!
-      puts "Run it if the previous entry was ok" if DEBUG==1
+      logger.debug "Run it if the previous entry was ok" 
       return true
     else
-      puts "precon = " +  chain.precondition.to_s if DEBUG==1
-      puts "Run it if the previous entry was errored" if DEBUG==1
+      logger.debug "precon = " +  chain.precondition.to_s 
+      logger.debug "Run it if the previous entry was errored" 
       return false
     end
   end
@@ -259,15 +274,15 @@ def isRightTimeForNew(chain)
   # The cron current allows for exact hour,minute,second,etc., or * for wildcard.
   
   if RUNEVERYTIME == 1
-    puts "returning true for isRightTime" if DEBUG == 1
+    logger.debug "returning true for isRightTime" 
     return true
   end
 
   if isSameTime(ca[0], ta[1]) && isSameTime(ca[1], ta[2]) &&  isSameTime(ca[2], ta[3]) && isSameTime(ca[3], ta[4]) && isSameTime(ca[4], ta[6]) 
-    puts "Its time to run!" if DEBUG == 1
+    logger.debug "Its time to run!" 
     return true
   else
-    puts "its not time to run" if DEBUG == 1
+    logger.debug "its not time to run" 
     return false
   end
   
@@ -290,24 +305,24 @@ end
 ##################################
 def alreadyStartedThisOne(c)
   # This checks to see if an isntances has already been started AND CLOSED
-  puts "looking for existing instances of this chain that started in this minute." if DEBUG==1
-  mySQL = %{ select * from chain_instances where concat(DATE_FORMAT(now(),'%y-%m-%d'), " ", hour(now()), ":", minute(now()) )  = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " ", hour(starttime), ":", minute(starttime))  and chain_id = } + c.id.to_s + ";"
-  puts mySQL if DEBUG==1
+  logger.debug "looking for existing instances of this chain that started in this minute." 
+  mySQL = %{ select * from chain_instances where concat(DATE_FORMAT(utc_timestamp(),'%y-%m-%d'), " ", hour(utc_timestamp()), ":", minute(utc_timestamp()) )  = concat(DATE_FORMAT(starttime,'%y-%m-%d'), " ", hour(starttime), ":", minute(starttime))  and chain_id = } + c.id.to_s + ";"
+  logger.debug mySQL 
   return ChainInstance.find_by_sql(mySQL).any?
 end
 
 ##################################
 def createInstance(c)
-    puts "creating a new instance" if DEBUG == 1
+    logger.debug "creating a new instance" 
     ci=c.chain_instances.create
     ci.starttime = Time.now
     ci.timeout = ci.chain.timeout
     ci.save
-    rc = runChainInstance(ci,0)
-    ci.status = rc
-    ci.completedtime = Time.now
-    ci.save
-    return ci
+    return runChainInstance(ci,0)
+    #ci.status = rc
+    #ci.completedtime = Time.now
+    #ci.save
+    #return ci
 end
 
 
@@ -327,32 +342,40 @@ end
 ###################################
 def currentInstanceExists(c)
   # currently assumes that each chain can only run one at a time!
-  return c.chain_instances.find_all_by_completed_and_status("0", nil).any?
+  logger.debug "checking chain " 
+  value = c.chain_instances.find_all_by_completed_and_status("0", nil).any?
+  logger.debug "got value"
+  return value
 end
 
 
 ###################################
 def CheckAllActions(pool)
+  itemToRun = ""
   ### THIS IS THE MAIN LOOP
-  puts "pool item" if DEBUG == 1
+  logger.debug "pool item" 
   if pool.actions.any?
-    puts "found some actions." if DEBUG == 1
+    logger.debug "found some actions." 
   end
   pool.actions.each do |a|
-    puts "Found action: " + a.description if DEBUG == 1
+    logger.debug "Found action: " + a.description 
     begin
       a.chains.each do |c|
-        puts "Found a chain: " + c.chain_instances.count.to_s if DEBUG == 1
+        logger.debug "Found a chain: " + c.chain_instances.count.to_s 
 
         # Find out if I need to run something that is a child from another
         # server.
+        logger.debug "getting parent instances"
         pis = getParentInstances(c)
+        logger.debug "checking parent instances"
         if parentInstancesDone(pis)
+          logger.debug "Does current instance exist?"
           unless currentInstanceExists(c)
+            logger.debug "current instance exists"
             unless pis.nil?
               pis.each do |ci|
-                puts "handling parent instances from posisbly another host" if DEBUG ==1
-                RunAllBottomEntries(ci)
+                logger.debug "handling parent instances from posisbly another host"
+                itemToRun = RunAllBottomEntries(ci)
               end
             end
           end
@@ -360,7 +383,9 @@ def CheckAllActions(pool)
 
         #all archiving is done from server that top Parent gets called from?
         # This should be run from a master archiver process on the server.
+        logger.debug "any parents?"
         unless c.parents.any?
+          logger.debug "getting all completed"
           c.chain_instances.find_all_by_completed("0").each do |ci|
             unless openInstancesInTree(ci)
               ArchiveChainInstanceTree(ci)
@@ -372,44 +397,32 @@ def CheckAllActions(pool)
         if isRightTimeForNew(c)
           if currentInstanceExists(c)
             # Check all chain instances.
-            puts "current instance exists..."
+            logger.debug "current instance exists..."
             c.chain_instances.each do |ci|
-              puts "found an existing instance: " + ci.id.to_s if DEBUG == 1
-              ransomething = RunAllBottomEntries(ci)
-              if ransomething == true || ransomething.nil?
-                 ArchiveChainInstanceTree(ci) 
-              end
+              logger.debug "found an existing instance: " + ci.id.to_s 
+              itemToRun = RunAllBottomEntries(ci)
             end  # c.chain_instances
           else # if c.chain_instances.any?
-            puts " no instnace  exists." if DEBUG ==1
+            logger.debug " no instnace  exists."
             unless alreadyStartedThisOne(c)
-              ci = createInstance(c)
-              puts "completed time " + ci.completedtime.to_s
+              itemToRun = createInstance(c)
               # This could be a subroutine
-              ransomething = RunAllBottomEntries(ci)
-              if ransomething == true || ransomething.nil? 
-                ArchiveChainInstanceTree(ci)
-              end
+              #if ransomething == true || ransomething.nil? 
+                #ArchiveChainInstanceTree(ci)
+              #end
 
             else
-              puts "A chain has already started this minute." if DEBUG==1
+              logger.debug "A chain has already started this minute." 
             end
           end # if c.chain_instances.any?
         end
 
       end # a.chains
     rescue
-        puts "Problem parsing all chain actions." + $! if DEBUG == 1
+        logger.debug "Problem parsing all chain actions." 
     end
   end
-  
+  return itemToRun
 end
-
-
-###################################
-###################################
-## PRIMARY CODE
-###################################
-###################################
 
 
