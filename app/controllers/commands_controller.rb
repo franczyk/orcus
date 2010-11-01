@@ -1,9 +1,4 @@
 # TODO:
-#   Retries... should the client record each retry?  Its simpler if you dont
-#   right now.
-#
-#   Write client that pulls next job, and pushes completed jobs.
-#
 #   Authentication - With separate users
 #
 
@@ -49,8 +44,8 @@ class CommandsController < ApplicationController
     @action=""
     @host.pools.each do |pool| 
       logger.debug "checking actions.\n"
-      @action =  CheckAllActions(pool) + "\n"
-      if @action == ""
+      @action =  CheckAllActions(pool)
+      unless @action.nil?
         break
       end
     end
@@ -58,7 +53,7 @@ class CommandsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @host }
+      format.xml  { render :xml => @action }
     end
   end
 end
@@ -108,7 +103,8 @@ end
 ###################################
 def runChainInstance(ci, retrynumber)
   logger.info "Running command: " + ci.chain.action.command 
-  return ci.chain.action.command
+  #return ci.chain.action.command
+  return ci
 end
 
 
