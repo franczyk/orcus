@@ -1,5 +1,5 @@
 Orcus::Application.routes.draw do
-  resources :actions
+  resources :acts
 
   resources :automations
 

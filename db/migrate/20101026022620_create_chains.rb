@@ -1,7 +1,7 @@
 class CreateChains < ActiveRecord::Migration
   def self.up
     create_table :chains do |t|
-      t.integer :action_id
+      t.integer :act_id
       t.string :precondition
       t.integer :retries
       t.integer :timeout

@@ -41,11 +41,11 @@ class CommandsController < ApplicationController
     @host = Host.find_by_name(hostname)
     @host = setupHost(@host,hostname)
 
-    @action=""
+    @act=""
     @host.pools.each do |pool| 
       logger.debug "checking actions.\n"
-      @action =  CheckAllActions(pool)
-      unless @action.nil?
+      @act =  CheckAllActions(pool)
+      unless @act.nil?
         break
       end
     end
@@ -53,7 +53,7 @@ class CommandsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @action }
+      format.xml  { render :xml => @act }
     end
   end
 end
@@ -112,8 +112,8 @@ end
 
 ###################################
 def runChainInstance(ci, retrynumber)
-  logger.info "Running command: " + ci.chain.action.command 
-  #return ci.chain.action.command
+  logger.info "Running command: " + ci.chain.act.command 
+  #return ci.chain.act.command
   return ci
 end
 
@@ -124,7 +124,7 @@ def runChildren(ci)
   # condition
   logger.debug "looking for children: " + ci.id.to_s 
   ci.chain.children.each do |child|
-    if child.action.pool.hosts.find_by_name(hostname)
+    if child.act.pool.hosts.find_by_name(hostname)
       childinstance = child.chain_instances.create
       childinstance.starttime = Time.now
       childinstance.timeout = child.timeout
@@ -151,7 +151,7 @@ def RunAllBottomEntries(ci)
   logger.debug "Running all bottom entries." 
   if isOpen(ci)
     # dont touch this one cause its waiting to complete.
-    logger.debug "It is still running.  Waiting for it to time out or complete: " + ci.chain.action.command 
+    logger.debug "It is still running.  Waiting for it to time out or complete: " + ci.chain.act.command 
   elsif isTimedOut(ci)
     logger.debug "Timed out: " + ci.id.to_s 
     ci.completedtime = Time.now
@@ -364,10 +364,10 @@ def CheckAllActions(pool)
   itemToRun = ""
   ### THIS IS THE MAIN LOOP
   logger.debug "pool item" 
-  if pool.actions.any?
-    logger.debug "found some actions." 
+  if pool.acts.any?
+    logger.debug "found some acts." 
   end
-  pool.actions.each do |a|
+  pool.acts.each do |a|
     logger.debug "Found action: " + a.description 
     begin
       a.chains.each do |c|
