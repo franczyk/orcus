@@ -1,6 +1,6 @@
 <p>
   <b>Action:</b>
-  <%=h @chain.action.description %>
+  <%=h @chain.act.description %>
 </p>
 
 <p>
@@ -11,7 +11,7 @@
   Parents:
   <ul>
     <% @chain.parents.each do |p| %>
-      <li><%=h link_to(p.action.description, :controller => "chains", :action => "show", :id => p.id )  %></li>
+      <li><%=h link_to(p.act.description, :controller => "chains", :action => "show", :id => p.id )  %></li>
     <% end %>
     <% unless @chain.parents.any? %>
       <li>None</li>
@@ -21,7 +21,7 @@
   Children:
   <ul>
     <% @chain.children.each do |c| %>
-      <li> <%= link_to(c.action.description, :controller => "chains", :action => "show", :id => c.id ) %> </li>
+      <li> <%= link_to(c.act.description, :controller => "chains", :action => "show", :id => c.id ) %> </li>
     <% end %>
     <% unless @chain.children.any? %>
       <li>None</li>

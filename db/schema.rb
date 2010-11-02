@@ -12,14 +12,6 @@
 
 ActiveRecord::Schema.define(:version => 20101102033323) do
 
-  create_table "actions", :force => true do |t|
-    t.string   "description"
-    t.string   "command"
-    t.integer  "pool_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "acts", :force => true do |t|
     t.string   "description"
     t.string   "command"
@@ -48,7 +40,7 @@ ActiveRecord::Schema.define(:version => 20101102033323) do
   end
 
   create_table "chains", :force => true do |t|
-    t.integer  "action_id"
+    t.integer  "act_id"
     t.string   "precondition"
     t.integer  "retries"
     t.integer  "timeout"
@@ -58,7 +50,7 @@ ActiveRecord::Schema.define(:version => 20101102033323) do
 
   create_table "events", :force => true do |t|
     t.integer  "chain_id"
-    t.integer  "action_id"
+    t.integer  "act_id"
     t.datetime "date"
     t.string   "description"
     t.datetime "created_at"

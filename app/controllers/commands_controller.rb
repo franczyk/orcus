@@ -41,6 +41,7 @@ class CommandsController < ApplicationController
     @host = Host.find_by_name(hostname)
     @host = setupHost(@host,hostname)
 
+
     @act=""
     @host.pools.each do |pool| 
       logger.debug "checking actions.\n"
@@ -49,6 +50,7 @@ class CommandsController < ApplicationController
         break
       end
     end
+
     # TODO:  Return commands in an object that can be passed to render :xml.
 
     respond_to do |format|

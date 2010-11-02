@@ -12,12 +12,12 @@
 
 <% @chains.each do |chain| %>
   <tr>
-    <td><%=h chain.action_id %></td>
-    <td><%=h chain.action.description %></td>
+    <td><%=h chain.act_id %></td>
+    <td><%=h chain.act.description %></td>
     <td><%=h chain.precondition %></td>
     <td><%=h chain.retries %></td>
     <td><%=h chain.timeout %></td>
-    <td><%=h link_to(chain.action.pool.name, :controller => "pools", :action => "show", :id => chain.action.pool.id) %></td>
+    <td><%=h link_to(chain.act.pool.name, :controller => "pools", :action => "show", :id => chain.act.pool.id) %></td>
     <td><%= link_to 'Show', chain %></td>
     <td><%= link_to 'Edit', edit_chain_path(chain) %></td>
     <td><%= link_to 'Destroy', chain, :confirm => 'Are you sure?', :method => :delete %></td>
@@ -29,4 +29,4 @@
 
 <%= link_to 'New chain', new_chain_path %>
 <br>
-<%= link_to 'Actions', actions_path %>
+<%= link_to 'Actions', acts_path %>
