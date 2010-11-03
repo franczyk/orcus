@@ -1,0 +1,30 @@
+%p
+  %b Action
+  = @chain.act.description
+%p
+  %b Precondition:
+  = @chain.precondition
+  %br
+  %br
+  Parents
+  %ul
+    - @chain.parents.each do |p|
+      %li
+        =link_to(p.act.description, :controller => "chains", :action => "show", :id => p.id )
+    - unless @chain.parents.any?
+      %li None
+  %br
+  Children
+  %ul
+    - @chain.children.each do |c|
+      %li 
+        = link_to(c.act.description, :controller => "chains", :action => "show", :id => c.id )
+    - unless @chain.children.any?
+      %li None
+%br
+%p
+  %b Retries:
+  = @chain.retries
+
+= link_to 'Edit', edit_chain_path(@chain)
+= link_to 'Back', chains_path

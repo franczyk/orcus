@@ -1,0 +1,23 @@
+%h1 ORCUS Automation Engine
+
+%table
+  %tr
+    %th Action
+    %th Description
+    %th Retries
+    %th Timeout
+    %th Pool
+  - @chains.each do |chain| 
+    %tr
+      %td= chain.act_id
+      %td= chain.act.description
+      %td= chain.retries
+      %td= chain.timeout
+      %td= link_to(chain.act.pool.name, :controller => "pools", :action => "show", :id => chain.act.pool.id)
+      %td= link_to 'Show', chain
+      %td= link_to 'Edit', edit_chain_path(chain)
+      %td= link_to 'Destroy', chain, :confirm => 'Are you sure?', :method => :delete
+  
+
+%p= link_to 'New chain', new_chain_path
+%p= link_to 'Actions', acts_path
