@@ -30,6 +30,8 @@ INSTALL:
 - Setup the config/database.yml file with the proper username and password for your mysql database
 - cd into the project directory
 - Type 
+	gem install haml
+	gem install mysql
 	rake db:migrate
 	rake db:fixtures:load
 	rails server start
