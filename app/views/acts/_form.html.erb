@@ -1,0 +1,30 @@
+<%= form_for(@act) do |f| %>
+  <% if @act.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@act.errors.count, "error") %> prohibited this act from being saved:</h2>
+
+      <ul>
+      <% @act.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :command %><br />
+    <%= f.text_field :command %>
+  </div>
+  <div class="field">
+    <%= f.label :pool_id %><br />
+    <%#= f.text_field :pool_id %>
+    <%= collection_select(:act, :pool_id, Pool.all, :id, :name  ) %> 
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
