@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101102033323) do
+ActiveRecord::Schema.define(:version => 20101104011739) do
 
   create_table "acts", :force => true do |t|
     t.string   "description"
@@ -67,6 +67,13 @@ ActiveRecord::Schema.define(:version => 20101102033323) do
   create_table "hosts", :force => true do |t|
     t.string   "name"
     t.datetime "last_checkin"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "outputs", :force => true do |t|
+    t.integer  "chain_instance_id"
+    t.string   "output"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

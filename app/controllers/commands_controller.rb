@@ -5,7 +5,7 @@
 
 class CommandsController < ApplicationController
   DEBUG=0
-  RUNEVERYTIME=1
+  RUNEVERYTIME=0
 
   # Post to this with something like this:
   # curl -d "<content><status>content from output of script</status><output>outputfrom script</output><chainInstance>123</chainInstance></content>" -H "Content-Type: application/xml" -X POST http://localhost:3002/commands/save/bountyhunter
@@ -30,6 +30,10 @@ class CommandsController < ApplicationController
     ci.completed = 1
     ci.completedtime = Time.now
     ci.save
+
+    o = ci.output.create
+    o.output = output
+    o.save
 
     logger.info "chain id = " + ci.chain.id.to_s  
 
@@ -267,7 +271,6 @@ def isSameTime(crontime, currenttime)
     logger.debug "found commas " 
     cronarray = crontime.split(/,/)
     cronarray.each do |time|
- #     logger.debug "comparing " + currenttime.to_s + " to " + time.to_s 
       if time.to_i == currenttime.to_i 
         logger.debug "Match! " 
         return true
