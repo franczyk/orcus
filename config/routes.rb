@@ -21,6 +21,7 @@ Orcus::Application.routes.draw do
 
   match "/commands/save/:id" => "commands#saveAction" 
   match "/commands/:id" => "commands#getAvailableAction"
+  match "/commands/getAction/:id" => "commands#getActionCommand"
 
 
   # The priority is based upon order of creation:

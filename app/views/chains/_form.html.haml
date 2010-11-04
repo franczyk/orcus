@@ -17,6 +17,11 @@
     = f.label :precondition
     %br
     = f.text_field :precondition
+    %ul
+      %li Option 1: Cron Style entry "30 10 * * * my cron comment"
+      %li Option 2: "1" means it only runs if the parent is successful.
+      %li Option 3: "0" means it only runs if the parent is unsuccessful.
+    %br
   .field
     = f.label :retries
     %br
