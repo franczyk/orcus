@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  chain_instance_id: 1
+  output: MyString
+
+two:
+  chain_instance_id: 1
+  output: MyString
