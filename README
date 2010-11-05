@@ -37,3 +37,4 @@ INSTALL:
 	rails server start
 
 
+Major contributor:  Donovan Cunningham
