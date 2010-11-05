@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Description:</b>
+  <%= @act.description %>
+</p>
+
+<p>
+  <b>Command:</b>
+  <%= @act.command %>
+</p>
+
+<p>
+  <b>Pool:</b>
+  <%= @act.pool.name %>
+</p>
+
+
+<%= link_to 'Edit', edit_act_path(@act) %> |
+<%= link_to 'Back', acts_path %>

@@ -1,0 +1,34 @@
+= form_for(@chain) do |f|
+  - if @chain.errors.any?
+    #error_explanation
+      %h2 
+        = pluralize(@chain.errors.count, "error")
+        prohibited this chain from being saved:
+        %ul 
+          - @chain.errors.full_messages.each do |msg|
+            %li
+              = msg
+
+  .field
+    = f.label :action_id
+    %br
+    = collection_select(:chain, :act_id, Act.all, :id, :description  ) 
+  .field
+    = f.label :precondition
+    %br
+    = f.text_field :precondition
+    %ul
+      %li Option 1: Cron Style entry "30 10 * * * my cron comment"
+      %li Option 2: "1" means it only runs if the parent is successful.
+      %li Option 3: "0" means it only runs if the parent is unsuccessful.
+    %br
+  .field
+    = f.label :retries
+    %br
+    = f.text_field :retries
+  .field
+    = f.label :timeout
+    %br
+    = f.text_field :timeout
+  .actions
+    = f.submit

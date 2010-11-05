@@ -2,12 +2,12 @@
 
 one:
   chain_id: 1
-  action_id: 1
+  act_id: 1
   date: 2010-10-02 01:01:32
   description: MyString
 
 two:
   chain_id: 1
-  action_id: 1
+  act_id: 1
   date: 2010-10-02 01:01:32
   description: MyString

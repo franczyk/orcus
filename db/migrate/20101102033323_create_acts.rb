@@ -1,6 +1,6 @@
-class CreateActions < ActiveRecord::Migration
+class CreateActs < ActiveRecord::Migration
   def self.up
-    create_table :actions do |t|
+    create_table :acts do |t|
       t.string :description
       t.string :command
       t.integer :pool_id
@@ -10,6 +10,6 @@ class CreateActions < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :actions
+    drop_table :acts
   end
 end

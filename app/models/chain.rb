@@ -1,6 +1,6 @@
 class Chain < ActiveRecord::Base
   has_many :automations
-  belongs_to :action
+  belongs_to :act
   has_many :parent_child_relationships, :foreign_key => "child_chain_id", :class_name => "Parent"
   has_many :parents, :through => :parent_child_relationships, :source => :parent
 

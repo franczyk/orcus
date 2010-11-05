@@ -10,9 +10,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101026022759) do
+ActiveRecord::Schema.define(:version => 20101104011739) do
 
-  create_table "actions", :force => true do |t|
+  create_table "acts", :force => true do |t|
     t.string   "description"
     t.string   "command"
     t.integer  "pool_id"
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(:version => 20101026022759) do
   end
 
   create_table "chains", :force => true do |t|
-    t.integer  "action_id"
+    t.integer  "act_id"
     t.string   "precondition"
     t.integer  "retries"
     t.integer  "timeout"
@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(:version => 20101026022759) do
 
   create_table "events", :force => true do |t|
     t.integer  "chain_id"
-    t.integer  "action_id"
+    t.integer  "act_id"
     t.datetime "date"
     t.string   "description"
     t.datetime "created_at"
@@ -67,6 +67,13 @@ ActiveRecord::Schema.define(:version => 20101026022759) do
   create_table "hosts", :force => true do |t|
     t.string   "name"
     t.datetime "last_checkin"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "outputs", :force => true do |t|
+    t.integer  "chain_instance_id"
+    t.string   "output"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
