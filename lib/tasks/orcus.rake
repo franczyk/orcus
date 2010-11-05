@@ -1,4 +1,4 @@
-namespace :photos do
+namespace :orcus do
   task :reset=> :environment do
     Rake::Task["db:migrate:reset"].invoke
     Rake::Task["db:fixtures:load"].invoke
