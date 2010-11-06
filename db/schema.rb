@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101104011739) do
+ActiveRecord::Schema.define(:version => 20101106144028) do
 
   create_table "acts", :force => true do |t|
     t.string   "description"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20101104011739) do
 
   create_table "chains", :force => true do |t|
     t.integer  "act_id"
+    t.integer  "trigger_id"
     t.string   "precondition"
     t.integer  "retries"
     t.integer  "timeout"
@@ -94,6 +95,12 @@ ActiveRecord::Schema.define(:version => 20101104011739) do
 
   create_table "pools", :force => true do |t|
     t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "triggers", :force => true do |t|
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

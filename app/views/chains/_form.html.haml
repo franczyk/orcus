@@ -14,6 +14,10 @@
     %br
     = collection_select(:chain, :act_id, Act.all, :id, :description  ) 
   .field
+    = f.label :trigger_id
+    %br
+    = collection_select(:chain, :trigger_id, Trigger.all, :id, :description )
+  .field
     = f.label :precondition
     %br
     = f.text_field :precondition

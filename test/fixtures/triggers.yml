@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  id: 1
+  description: Cron
+
+two:
+  id: 2
+  description: Parent Status
+
+three:
+  id: 3
+  description: HTTP Changes
+
+four:
+  id: 4
+  description: File Existence
+
+five:
+  id: 5
+  description: Manual Start
+
+six:
+  id: 6
+  description: File Modified

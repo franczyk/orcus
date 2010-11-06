@@ -4,6 +4,9 @@
   %tr
     %th Action
     %th Description
+    %th Trigger
+    %th Parents
+    %th Children
     %th Retries
     %th Timeout
     %th Pool
@@ -11,6 +14,23 @@
     %tr
       %td= chain.act_id
       %td= chain.act.description
+      %td= chain.trigger.description
+      - a = []
+      - chain.parents.each do |par|
+        - a << par.id
+      %td
+        - if a.length > 0
+          = a.to_sentence
+        - else
+          None
+      - a = []
+      - chain.children.each do |ch|
+        - a << ch.id
+      %td
+        - if a.length > 0
+          = a.to_sentence
+        - else
+          None
       %td= chain.retries
       %td= chain.timeout
       %td= link_to(chain.act.pool.name, :controller => "pools", :action => "show", :id => chain.act.pool.id)
