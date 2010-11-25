@@ -2,24 +2,30 @@
 
 one:
   id: 1
+  tag: cron
   description: Cron
 
 two:
   id: 2
+  tag: parent
   description: Parent Status
 
 three:
   id: 3
+  tag: httpmod
   description: HTTP Changes
 
 four:
   id: 4
+  tag: fileex
   description: File Existence
 
 five:
   id: 5
+  tag: manual
   description: Manual Start
 
 six:
   id: 6
+  tag: filemod
   description: File Modified

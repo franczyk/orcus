@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(:version => 20101106144028) do
   end
 
   create_table "triggers", :force => true do |t|
+    t.string   "tag"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"

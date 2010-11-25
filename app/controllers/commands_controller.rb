@@ -240,16 +240,21 @@ end
 
 
 ###################################
-def isCronStyleEntry(cronentry)
-
-  logger.debug "cronentry = " + cronentry 
-  if cronentry =~ /^[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s*.*/
-    logger.debug "is a cron style entry" 
+def isCronStyleEntry(chain)
+  if chain.trigger.tag == "cron"
     return true
   else
-    logger.debug "Not a cron style entry." 
     return false
   end
+
+  #logger.debug "cronentry = " + cronentry 
+  #if cronentry =~ /^[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s+[0-9,\*]+\s*.*/
+    #logger.debug "is a cron style entry" 
+    #return true
+  #else
+    #logger.debug "Not a cron style entry." 
+    #return false
+  #end
 end
 
 def isSameTime(crontime, currenttime)
@@ -284,7 +289,7 @@ end
 ###################################
 def isRightTimeForNew(chain)
   cronentry = chain.precondition
-  unless isCronStyleEntry(chain.precondition)
+  unless isCronStyleEntry(chain)
     if chain.precondition == "1"
       # TODO:  CHECK TO SEE IF PAREENT ACTUALLY EXITED SUCCESSFULLY!
       logger.debug "Run it if the previous entry was ok" 
